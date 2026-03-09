@@ -3,6 +3,19 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Breed(models.Model):
+    class Size(models.IntegerChoices):
+        SMALL = 1, "small"
+        MEDIUM = 2, "medium"
+        LARGE = 3, "large"
+
+
+    class Rating(models.IntegerChoices):
+        VERY_LOW = 1, "1 - very low"
+        LOW = 2, "2 - low"
+        MEDIUM = 3, "3 - medium"
+        HIGH = 4, "4 - high"
+        VERY_HIGH = 5, "5 - very high"
+
 
     class HousingType(models.TextChoices):
         APARTMENT = "Apartment", "apartment"
@@ -14,24 +27,25 @@ class Breed(models.Model):
     name = models.CharField(max_length=100)
 
     size = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(3)]
+        choices=Size.choices
     )
 
     energy = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
+        choices=Rating.choices
     )
 
     grooming = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
+        choices=Rating.choices
     )
 
     kids_friendly = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
+        choices=Rating.choices
     )
 
     housing = models.CharField(
         max_length=20,
-        choices=HousingType.choices
+        choices=HousingType.choices,
+        default=HousingType.BOTH
     )
 
     def __str__(self):
