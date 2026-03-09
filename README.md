@@ -64,7 +64,7 @@ Basic analytics for quiz results
 
 * size (1–3)
 
-* energy_level (1–5)
+* energy (1–5)
 
 * grooming_difficulty (1–5)
 
