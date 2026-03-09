@@ -6,3 +6,8 @@ from .serializers import BreedSerializer
 class BreedListView(generics.ListAPIView):
     queryset = Breed.objects.all()
     serializer_class = BreedSerializer
+
+
+class BreedDetailView(generics.RetrieveAPIView):
+    queryset = Breed.objects.all()
+    serializer_class = BreedSerializer
