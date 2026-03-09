@@ -26,6 +26,8 @@ class Breed(models.Model):
 
     name = models.CharField(max_length=100)
 
+    image_url = models.URLField(blank=True, null=True)
+
     size = models.IntegerField(
         choices=Size.choices
     )
