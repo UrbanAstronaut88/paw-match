@@ -3,6 +3,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Breed(models.Model):
+
+    class HousingType(models.TextChoices):
+        APARTMENT = "Apartment", "apartment"
+        HOUSE = "House", "house"
+        BOTH = "both", "apartment or house"
+
+    id = models.AutoField(primary_key=True)
+
     name = models.CharField(max_length=100)
 
     size = models.IntegerField(
@@ -21,7 +29,10 @@ class Breed(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
 
-    housing = models.CharField(max_length=80)
+    housing = models.CharField(
+        max_length=20,
+        choices=HousingType.choices
+    )
 
     def __str__(self):
         return self.name
