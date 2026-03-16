@@ -12,12 +12,13 @@ class BreedAdmin(admin.ModelAdmin):
         "energy",
         "grooming",
         "kids_friendly",
-        "housing",
+        "housing_type",
+        "image_url",
     )
 
     list_filter = (
         "size",
-        "housing",
+        "housing_type",
     )
 
     search_fields = ("name",)
