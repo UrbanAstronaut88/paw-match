@@ -66,7 +66,7 @@ Basic analytics for quiz results
 
 * energy (1–5)
 
-* grooming_difficulty (1–5)
+* grooming (1–5)
 
 * kids_friendly
 
@@ -116,10 +116,7 @@ git clone https://github.com/UrbanAstronaut88/paw-match
 cd paw-match
 ```
 
-* Run with Docker:
-```bash
-docker-compose up --build
-```
+
 
 ----------------------------------------------------------------------
 
@@ -128,11 +125,22 @@ docker-compose up --build
 * ## Backend Developer
 #### Responsible for API development, database architecture, and matching algorithm.
 
+
 * ## Frontend Developer
 #### Responsible for UI implementation and quiz interface.
+
 
 * ## QA Engineer
 #### Responsible for testing and validating matching logic.
 
-* ## Scrum Master
+
+* ## Designer
+#### Responsible for designing the user interface and user experience.
+
+
+* ## Data Analyst
+#### Responsible for data analysis and data visualization.
+
+
+* ## Project Manager
 #### Responsible for task management and sprint organization.

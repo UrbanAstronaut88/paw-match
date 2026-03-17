@@ -1,8 +1,9 @@
-from django.urls import path
-from .views import BreedListView, BreedDetailView
+from rest_framework.routers import DefaultRouter
+
+from .views import BreedViewSet
 
 
-urlpatterns = [
-    path("breeds/", BreedListView.as_view(), name="breeds-list"),
-    path("breeds/<int:pk>/", BreedDetailView.as_view(), name="breed-detail"),
-]
+router = DefaultRouter()
+router.register("breeds", BreedViewSet)
+
+urlpatterns = router.urls
