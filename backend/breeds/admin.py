@@ -19,6 +19,9 @@ class BreedAdmin(admin.ModelAdmin):
     list_filter = (
         "size",
         "housing_type",
+        "kids_friendly",
+        "energy",
+        "grooming",
     )
 
     search_fields = ("name",)
