@@ -19,7 +19,7 @@ class Breed(models.Model):
     class HousingType(models.TextChoices):
         APARTMENT = "Apartment", "apartment"
         HOUSE = "House", "house"
-        BOTH = "both", "apartment or house"
+        BOTH = "both", "apartment and house"
 
     id = models.AutoField(primary_key=True)
 
@@ -50,7 +50,6 @@ class Breed(models.Model):
     )
 
     description = models.TextField(blank=True, null=True)
-
 
 
     def __str__(self):
