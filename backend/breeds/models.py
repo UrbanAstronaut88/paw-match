@@ -44,7 +44,6 @@ class Breed(models.Model):
     )
 
     housing_type = models.CharField(
-        max_length=20,
         choices=HousingType.choices,
         default=HousingType.BOTH
     )
