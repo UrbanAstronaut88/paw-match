@@ -17,13 +17,9 @@ class BreedViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MatchView(APIView):
     def post(self, request):
-
         user_data = request.data
-
         breeds = Breed.objects.all()
-
         matches = get_best_matches(user_data, breeds)
-
         result = []
 
         for item in matches:
