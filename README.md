@@ -21,7 +21,7 @@ Favorites list for users
 Basic analytics for quiz results
 
 ## Tech Stack
-* Backend
+### Backend:
 
 * Python 3.12
 
