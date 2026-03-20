@@ -2,12 +2,13 @@ from rest_framework import viewsets
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Breed
+from .models import Breed, Favorite
 from .serializers import BreedSerializer
 from .services.matching import get_best_matches
-
 
 
 class BreedViewSet(viewsets.ReadOnlyModelViewSet):
@@ -16,7 +17,7 @@ class BreedViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MatchView(APIView):
-    def post(self, request):
+    def post(self, request: Request) -> Response:
         user_data = request.data
         breeds = Breed.objects.all()
         matches = get_best_matches(user_data, breeds)
@@ -28,3 +29,30 @@ class MatchView(APIView):
             result.append(breed_data)
 
         return Response(result, status=status.HTTP_200_OK)
+
+
+class AddFavoriteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request, pk: int) -> Response:
+        breed = Breed.objects.get(pk=pk)
+
+        Favorite.objects.get_or_create(
+            user=request.user,
+            breed=breed
+        )
+
+        return Response({"status": "added"})
+
+
+class RemoveFavoriteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request: Request, pk: int) -> Response:
+
+        Favorite.objects.filter(
+            user=request.user,
+            breed_id=pk
+        ).delete()
+
+        return Response({"status": "removed"})
