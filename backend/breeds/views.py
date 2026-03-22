@@ -1,4 +1,5 @@
 from django.db.models import QuerySet
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
 
@@ -17,6 +18,9 @@ from .services.matching import get_best_matches
 class BreedViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Breed.objects.all()
     serializer_class = BreedSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["size", "energy", "kids_friendly", "housing_type"]
 
 
 class MatchView(APIView):
