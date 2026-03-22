@@ -7,6 +7,7 @@ from breeds.views import (
     AddFavoriteView,
     RemoveFavoriteView,
     QuizResultListView,
+    FavoriteListView,
 )
 
 
@@ -32,6 +33,12 @@ urlpatterns = [
         "quiz-results/",
         QuizResultListView.as_view(),
         name="quiz-results"
+    ),
+
+    path(
+        "favorites/",
+        FavoriteListView.as_view(),
+        name="favorites"
     ),
 ]
 

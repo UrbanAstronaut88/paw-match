@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
 
@@ -8,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from .models import Breed, Favorite, QuizResult
-from .serializers import BreedSerializer, QuizResultSerializer
+from .serializers import BreedSerializer, QuizResultSerializer, FavoriteSerializer
 from .services.matching import get_best_matches
 
 
@@ -80,3 +81,11 @@ class QuizResultListView(ListAPIView):
 
     def get_queryset(self):
         return QuizResult.objects.filter(user=self.request.user).order_by("-created_at")
+
+
+class FavoriteListView(ListAPIView):
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self) -> QuerySet[Favorite]:
+        return Favorite.objects.filter(user=self.request.user)
