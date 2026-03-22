@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from .views import (
+from breeds.views import (
     BreedViewSet,
     MatchView,
     AddFavoriteView,
@@ -13,19 +13,15 @@ from .views import (
 router = DefaultRouter()
 router.register("breeds", BreedViewSet)
 
+
 urlpatterns = [
-    path(
-        "match/",
-        MatchView.as_view(),
-        name="match"
-    ),
+    path("match/", MatchView.as_view(), name="match"),
 
     path(
         "breeds/<int:pk>/favorite/",
         AddFavoriteView.as_view(),
         name="add-favorite"
     ),
-
     path(
         "breeds/<int:pk>/unfavorite/",
         RemoveFavoriteView.as_view(),
