@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,9 +7,10 @@ from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Breed, Favorite
-from .serializers import BreedSerializer
+from .models import Breed, Favorite, QuizResult
+from .serializers import BreedSerializer, QuizResultSerializer
 from .services.matching import get_best_matches
+
 
 
 class BreedViewSet(viewsets.ReadOnlyModelViewSet):
@@ -17,11 +19,24 @@ class BreedViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MatchView(APIView):
+
     def post(self, request: Request) -> Response:
-        user_data = request.data
+
+        user_data: dict = request.data
+
+        QuizResult.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            size=user_data["size"],
+            energy=user_data["energy"],
+            kids=user_data["kids"],
+            housing=user_data["housing"],
+        )
+
         breeds = Breed.objects.all()
+
         matches = get_best_matches(user_data, breeds)
-        result = []
+
+        result: list[dict] = []
 
         for item in matches:
             breed_data = BreedSerializer(item["breed"]).data
@@ -56,3 +71,12 @@ class RemoveFavoriteView(APIView):
         ).delete()
 
         return Response({"status": "removed"})
+
+
+class QuizResultListView(ListAPIView):
+
+    serializer_class = QuizResultSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return QuizResult.objects.filter(user=self.request.user).order_by("-created_at")
