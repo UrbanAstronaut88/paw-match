@@ -12,7 +12,7 @@ WEIGHTS: Dict[str, float] = {
     "size": 1.0,
     "energy": 1.5,
     "kids": 2.0,
-    "housing": 2.5,
+    "housing_type": 2.5,
 }
 
 
@@ -39,8 +39,8 @@ def calculate_score(user_data: Dict, breed: Breed) -> float:
     )
 
     # HOUSING (categorical parametrize)
-    if breed.housing_type != user_data["housing"]:
-        score += WEIGHTS["housing"]
+    if breed.housing_type != user_data["housing_type"]:
+        score += WEIGHTS["housing_type"]
 
     return score
 
