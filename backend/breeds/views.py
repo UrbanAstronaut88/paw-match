@@ -16,7 +16,7 @@ from .services.matching import get_best_matches
 
 
 class BreedViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Breed.objects.all()
+    queryset = Breed.objects.all().order_by("name")
     serializer_class = BreedSerializer
 
     filter_backends = [DjangoFilterBackend]
