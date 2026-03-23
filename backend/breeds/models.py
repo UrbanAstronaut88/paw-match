@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -44,13 +45,39 @@ class Breed(models.Model):
     )
 
     housing_type = models.CharField(
-        max_length=20,
         choices=HousingType.choices,
         default=HousingType.BOTH
     )
 
     description = models.TextField(blank=True, null=True)
 
-
     def __str__(self):
         return self.name
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    breed = models.ForeignKey(Breed, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "breed")
+
+
+class QuizResult(models.Model):
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+
+    size = models.IntegerField()
+    energy = models.IntegerField()
+    kids = models.IntegerField()
+    housing_type = models.CharField(max_length=20)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"QuizResult {self.id}"
