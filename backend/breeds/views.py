@@ -84,6 +84,14 @@ class RemoveFavoriteView(APIView):
         return Response({"status": "removed"})
 
 
+class FavoriteListView(ListAPIView):
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self) -> QuerySet[Favorite]:
+        return Favorite.objects.filter(user=self.request.user)
+
+
 class QuizResultListView(ListAPIView):
 
     serializer_class = QuizResultSerializer
@@ -91,11 +99,3 @@ class QuizResultListView(ListAPIView):
 
     def get_queryset(self):
         return QuizResult.objects.filter(user=self.request.user).order_by("-created_at")
-
-
-class FavoriteListView(ListAPIView):
-    serializer_class = FavoriteSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self) -> QuerySet[Favorite]:
-        return Favorite.objects.filter(user=self.request.user)
