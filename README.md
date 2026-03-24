@@ -114,6 +114,11 @@ git clone https://github.com/UrbanAstronaut88/paw-match
 
 ```bash
 cd paw-match
+
+cd backend
+
+docker-compose up --build
+
 ```
 
 

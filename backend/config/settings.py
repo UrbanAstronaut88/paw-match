@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "breeds",
     "users",
     "django_filters",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -80,10 +81,24 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# SQLite
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+DB_HOST = os.getenv("DB_HOST", "localhost")
+#PostgreSQL
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "pawmatch",
+        "USER": "pawuser",
+        "PASSWORD": "pawpass",
+        "HOST": DB_HOST,
+        "PORT": "5432",
     }
 }
 
@@ -135,9 +150,19 @@ REST_FRAMEWORK = {
 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
+
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+}
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "PawMatch API",
+    "DESCRIPTION": "API for matching dog breeds",
+    "VERSION": "1.0.0",
 }

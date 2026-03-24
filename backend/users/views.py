@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import RegisterSerializer, LoginSerializer, LogoutSerializer
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    LogoutSerializer,
+    UserSerializer,
+)
 
 
 class RegisterView(generics.CreateAPIView):
@@ -48,3 +54,11 @@ class LogoutView(GenericAPIView):
             {"message": "Successfully logged out"},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)

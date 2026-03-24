@@ -75,3 +75,9 @@ class LogoutSerializer(serializers.Serializer):
 
         except Exception:
             raise serializers.ValidationError("Invalid or expired token")
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email")
