@@ -20,6 +20,9 @@ Favorites list for users
 
 Basic analytics for quiz results
 
+------------------------------------
+
+Logout works on client side by removing JWT tokens.
 ## Tech Stack
 ### Backend:
 
@@ -85,23 +88,6 @@ Basic analytics for quiz results
 * password (hashed)
 
 * favorites
-
-## QuizResults
-
-### Stores answers from the matching quiz.
-
-#### Fields:
-
-* user_id
-
-* activity_level
-
-* living_space
-
-* kids
-
-* created_at
-
 
 ## Setup (Development)
 

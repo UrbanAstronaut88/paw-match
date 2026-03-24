@@ -11,7 +11,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
-    LogoutSerializer,
     UserSerializer,
 )
 
@@ -38,21 +37,13 @@ class LoginView(GenericAPIView):
         }, status=status.HTTP_200_OK)
 
 
-class LogoutView(GenericAPIView):
-    serializer_class = LogoutSerializer
+class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = self.get_serializer(
-            data=request.data,
-            context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
         return Response(
             {"message": "Successfully logged out"},
-            status=status.HTTP_204_NO_CONTENT
+            status=status.HTTP_200_OK
         )
 
 
