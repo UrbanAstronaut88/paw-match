@@ -1,4 +1,5 @@
 from django.db.models import QuerySet
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
@@ -57,14 +58,17 @@ class AddFavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request, pk: int) -> Response:
-        breed = Breed.objects.get(pk=pk)
+        breed = get_object_or_404(Breed, pk=pk)
 
-        Favorite.objects.get_or_create(
+        obj, created = Favorite.objects.get_or_create(
             user=request.user,
             breed=breed
         )
 
-        return Response({"status": "added"})
+        return Response({
+            "status": "added",
+            "created": created
+        })
 
 
 class RemoveFavoriteView(APIView):
