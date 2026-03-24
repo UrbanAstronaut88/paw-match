@@ -110,7 +110,36 @@ docker-compose up --build
 
 
 ----------------------------------------------------------------------
+# Breed Matching System
 
+The project includes an **advanced matching system** that recommends the most suitable dog breeds based on user preferences.
+
+---
+
+### Input Parameters
+
+The user provides:
+
+- `size` (1–3)
+- `energy` (1–5)
+- `kids` (1–5)
+- `housing_type` ("Apartment", "House", "Apartment/House")
+
+---
+
+### Matching Algorithm
+
+Each breed is evaluated using a weighted scoring system.
+
+#### Weights:
+
+- size → 1.0  
+- energy → 1.5  
+- kids → 2.0  
+- housing → 2.5  
+
+
+--------------------------------------------------------------------
 # Team Roles
 
 * ## Backend Developer
