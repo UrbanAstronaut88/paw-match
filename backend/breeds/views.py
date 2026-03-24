@@ -45,6 +45,7 @@ class MatchView(APIView):
             {
                 "breed": match["breed"].name,
                 "score": match["score"],
+                "match": match["match"],
             }
             for match in matches
         ]
