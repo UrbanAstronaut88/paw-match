@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -17,7 +16,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "email", "password", "password2")
+        fields = ("email", "password", "password2")
+
+    def validate_email(self, email):
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError("User with this email already exists")
+
+        return email
 
     def validate(self, data):
         if data["password"] != data["password2"]:
