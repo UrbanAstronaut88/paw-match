@@ -1,124 +1,30 @@
-# Paw Match
+#  Paw Match
 
-Paw Match is a web service that helps users find the most suitable dog breed based on their lifestyle and preferences.
+**Paw Match** is a web service that helps users find the most suitable dog breed based on their lifestyle and preferences.
 
 The application analyzes user parameters (living space, activity level, presence of kids, etc.) and matches them with dog breed characteristics stored in the database.
 
-The goal of the project is to demonstrate a full-stack product workflow including backend API development, frontend UI, and recommendation logic.
+---
 
-## Features
+##  Features
 
-Dog breeds database
-
-Breed recommendation algorithm
-
-Quiz-based matching system
-
-REST API for frontend integration
-
-Favorites list for users
-
-Basic analytics for quiz results
-
-------------------------------------
-
-Logout works on client side by removing JWT tokens.
-## Tech Stack
-### Backend:
-
-* Python 3.12
-
-* Django
-
-* Django REST Framework
-
-* PostgreSQL
-
-* Django ORM
-
-## Infrastructure
-
-* Docker
-* Docker Compose
-* Authentication
-* JWT Authentication
-
-## Tools
-
-* Git / GitHub
-
-* Postman (API testing)
-
-* pytest (testing)
-
-
-## Database Models (Simplified)
-* Breeds
-
-* Stores information about dog breeds.
-
-### Fields:
-
-* name
-
-* description
-
-* image_url
-
-* size (1–3)
-
-* energy (1–5)
-
-* grooming (1–5)
-
-* kids_friendly
-
-* housing_type
-
-## Users
-
-* Stores user accounts.
-
-### Fields:
-
-* email
-
-* name
-
-* password (hashed)
-
-* favorites
-
-## Setup (Development)
-
-### Clone the repository:
-
-```bash
-git clone https://github.com/UrbanAstronaut88/paw-match
-```
-* Go to project directory:
-
-```bash
-cd paw-match
-
-cd backend
-
-docker-compose up --build
-
-```
-
-
-
-----------------------------------------------------------------------
-# Breed Matching System
-
-The project includes an **advanced matching system** that recommends the most suitable dog breeds based on user preferences.
+-  Dog breeds database
+-  Smart breed recommendation algorithm
+-  Quiz-based matching system
+-  Favorites list for authenticated users
+-  Quiz results history
+-  JWT Authentication
+-  REST API for frontend integration
 
 ---
 
-### Input Parameters
+##  Matching System
 
-The user provides:
+The project includes an **advanced matching system** that recommends the most suitable dog breeds based on user preferences.
+
+###  Input Parameters
+
+User provides:
 
 - `size` (1–3)
 - `energy` (1–5)
@@ -127,40 +33,148 @@ The user provides:
 
 ---
 
-### Matching Algorithm
+###  Algorithm Logic
 
-Each breed is evaluated using a weighted scoring system.
+Each breed is evaluated using a **weighted scoring system**.
 
 #### Weights:
 
-- size → 1.0  
-- energy → 1.5  
-- kids → 2.0  
-- housing → 2.5  
+| Parameter | Weight |
+|----------|--------|
+| size     | 1.0    |
+| energy   | 1.5    |
+| kids     | 2.0    |
+| housing  | 2.5    |
+
+- Lower score → better match
+- Final result is converted into **match percentage (0–100%)**
+
+---
+
+##  API Overview
+
+###  Authentication
+
+- `POST /api/v1/auth/register/`
+- `POST /api/v1/auth/login/`
+- `POST /api/v1/auth/logout/`
+- `GET /api/v1/auth/me/`
+
+---
+
+###  Breeds
+
+- `GET /api/v1/breeds/`
+- `GET /api/v1/breeds/{id}/`
+
+---
+
+###  Matching
+
+- `POST /api/v1/match/`
+
+➡ Returns best matching breeds  
+➡ Automatically saves quiz result (if user is authenticated)
+
+---
+
+###  Favorites
+
+- `POST /api/v1/breeds/{id}/favorite/`
+- `DELETE /api/v1/breeds/{id}/unfavorite/`
+- `GET /api/v1/favorites/`
+
+---
+
+###  Quiz Results
+
+- `GET /api/v1/quiz-results/`
+- `GET /api/v1/quiz-results/{id}/`
+- `POST /api/v1/quiz-results/`
+
+Update/delete operations are intentionally disabled (immutable history)
+
+---
+
+##  Database Models (Simplified)
+
+### Breed
+
+- `name`
+- `description`
+- `image_url`
+- `size`
+- `energy`
+- `grooming`
+- `kids_friendly`
+- `housing_type`
+
+---
+
+### Favorite
+
+- `user`
+- `breed`
+
+---
+
+### QuizResult
+
+- `user`
+- `size`
+- `energy`
+- `kids`
+- `housing_type`
+- `created_at`
+
+---
+
+## Tech Stack
+
+### Backend:
+
+- Python 3.12
+- Django
+- Django REST Framework
+- PostgreSQL
+- Django ORM
+
+---
+
+## Infrastructure
+
+- Docker
+- Docker Compose
+- JWT Authentication
+
+---
+
+## Tools
+
+- Git / GitHub
+- Postman
+
+---
+
+## Setup (Development)
+
+### 1. Clone repository
+
+```bash
+git clone https://github.com/UrbanAstronaut88/paw-match
+```
+
+### 2. Run Project
+```
+cd paw-match
+docker-compose up --build
+```
 
 
---------------------------------------------------------------------
-# Team Roles
-
-* ## Backend Developer
-#### Responsible for API development, database architecture, and matching algorithm.
-
-
-* ## Frontend Developer
-#### Responsible for UI implementation and quiz interface.
-
-
-* ## QA Engineer
-#### Responsible for testing and validating matching logic.
-
-
-* ## Designer
-#### Responsible for designing the user interface and user experience.
-
-
-* ## Data Analyst
-#### Responsible for data analysis and data visualization.
-
-
-* ## Project Manager
-#### Responsible for task management and sprint organization.
+## Team Roles (Concept)
+* Backend Developer – API, database, matching logic
+* Frontend Developer – UI, quiz interface
+* QA Engineer – testing & validation
+* Designer – UX/UI
+* Data Analyst – analytics & insights
+* Project Manager – coordination

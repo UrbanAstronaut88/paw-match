@@ -6,13 +6,14 @@ from breeds.views import (
     MatchView,
     AddFavoriteView,
     RemoveFavoriteView,
-    QuizResultListView,
+    QuizResultViewSet,
     FavoriteListView,
 )
 
 
 router = DefaultRouter()
 router.register("breeds", BreedViewSet)
+router.register("quiz-results", QuizResultViewSet, basename="quiz-results")
 
 
 urlpatterns = [
@@ -23,16 +24,11 @@ urlpatterns = [
         AddFavoriteView.as_view(),
         name="add-favorite"
     ),
+
     path(
         "breeds/<int:pk>/unfavorite/",
         RemoveFavoriteView.as_view(),
         name="remove-favorite"
-    ),
-
-    path(
-        "quiz-results/",
-        QuizResultListView.as_view(),
-        name="quiz-results"
     ),
 
     path(

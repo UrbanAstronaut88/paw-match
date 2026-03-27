@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.generics import ListAPIView
 
 from rest_framework.views import APIView
@@ -38,6 +38,16 @@ class MatchView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         user_data = serializer.validated_data
+
+        # Save quiz result (if User is authenticated)
+        if request.user.is_authenticated:
+            QuizResult.objects.create(
+                user=request.user,
+                size=user_data["size"],
+                energy=user_data["energy"],
+                kids=user_data["kids"],
+                housing_type=user_data["housing_type"],
+            )
 
         breeds = Breed.objects.all()
         matches = get_best_matches(user_data, breeds)
@@ -92,10 +102,19 @@ class FavoriteListView(ListAPIView):
         return Favorite.objects.filter(user=self.request.user)
 
 
-class QuizResultListView(ListAPIView):
-
+class QuizResultViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     serializer_class = QuizResultSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return QuizResult.objects.filter(user=self.request.user).order_by("-created_at")
+        return QuizResult.objects.filter(
+            user=self.request.user
+        ).order_by("-created_at")
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
