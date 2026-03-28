@@ -168,6 +168,8 @@ git clone https://github.com/UrbanAstronaut88/paw-match
 ```
 cd paw-match
 docker-compose up --build
+
+docker compose exec web python manage.py createsuperuser
 ```
 
 
