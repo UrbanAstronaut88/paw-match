@@ -139,6 +139,14 @@ Update/delete operations are intentionally disabled (immutable history)
 - PostgreSQL
 - Django ORM
 
+### Frontend:
+
+* Vue 3 (Composition API)
+* Pinia
+* Vite
+* Tailwind CSS
+* Axios
+
 ---
 
 ## Infrastructure
