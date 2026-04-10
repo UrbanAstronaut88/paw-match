@@ -164,4 +164,9 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "PawMatch API",
     "DESCRIPTION": "API for matching dog breeds",
     "VERSION": "1.0.0",
+    "COMPONENT_SPLIT_REQUEST": True,
 }
+
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
