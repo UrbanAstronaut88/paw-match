@@ -143,3 +143,45 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "email", "profile")
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"}
+    )
+    new_password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"}
+    )
+    new_password2 = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password"}
+    )
+
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
+        request = self.context["request"]
+        user: User = request.user
+
+        old_password: str = attrs["old_password"]
+        new_password: str = attrs["new_password"]
+        new_password2: str = attrs["new_password2"]
+
+        if not user.check_password(old_password):
+            raise serializers.ValidationError(
+                {"old_password": "Old password is incorrect."}
+            )
+
+        if new_password != new_password2:
+            raise serializers.ValidationError(
+                {"new_password2": "Passwords do not match."}
+            )
+
+        validate_password(new_password, user=user)
+
+        if old_password == new_password:
+            raise serializers.ValidationError(
+                {"new_password": "New password must be different from old password."}
+            )
+
+        return attrs
