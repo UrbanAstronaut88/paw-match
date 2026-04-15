@@ -33,10 +33,8 @@ class MatchView(APIView):
         description="Calculate best breed matches and save quiz result for authenticated users",
     )
     def post(self, request: Request) -> Response:
-        serializer = MatchRequestSerializer(data=request.data)
-
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer: MatchRequestSerializer = MatchRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         user_data: dict = serializer.validated_data
 
@@ -61,7 +59,7 @@ class MatchView(APIView):
             for match in matches
         ]
 
-        return Response(result)
+        return Response(result, status=status.HTTP_200_OK)
 
 
 class AddFavoriteView(APIView):
@@ -84,7 +82,8 @@ class AddFavoriteView(APIView):
             {
                 "status": "added",
                 "created": created,
-            }
+            },
+            status=status.HTTP_200_OK,
         )
 
 
@@ -102,7 +101,7 @@ class RemoveFavoriteView(APIView):
             breed_id=pk,
         ).delete()
 
-        return Response({"status": "removed"})
+        return Response({"status": "removed"}, status=status.HTTP_200_OK)
 
 
 class FavoriteListView(ListAPIView):

@@ -17,9 +17,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         write_only=True,
         style={"input_type": "password"}
     )
-    name = serializers.CharField(required=False, allow_blank=True)
-    surname = serializers.CharField(required=False, allow_blank=True)
-    city = serializers.CharField(required=False, allow_blank=True)
+    name = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    surname = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    city = serializers.CharField(required=False, allow_blank=True, max_length=100)
     age = serializers.IntegerField(required=False, min_value=1, max_value=120)
 
     class Meta:
@@ -36,11 +36,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
     def validate_email(self, email: str) -> str:
-        if User.objects.filter(email=email).exists():
+        normalized_email: str = email.strip().lower()
+
+        if User.objects.filter(email=normalized_email).exists():
             raise serializers.ValidationError(
                 "User with this email already exists"
             )
-        return email
+
+        return normalized_email
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         if data["password"] != data["password2"]:
@@ -76,10 +79,12 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
-        user: User | None = User.objects.filter(email=data["email"]).first()
+        email: str = data["email"].strip().lower()
+
+        user: User | None = User.objects.filter(email=email).first()
 
         if user is None:
-            raise serializers.ValidationError("User not found")
+            raise serializers.ValidationError({"email": "User not found"})
 
         authenticated_user: User | None = authenticate(
             username=user.username,
@@ -87,7 +92,7 @@ class LoginSerializer(serializers.Serializer):
         )
 
         if authenticated_user is None:
-            raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError({"password": "Invalid credentials"})
 
         data["user"] = authenticated_user
         return data
