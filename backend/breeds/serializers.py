@@ -65,3 +65,4 @@ class MatchRequestSerializer(serializers.Serializer):
     energy = serializers.IntegerField(min_value=1, max_value=5)
     kids = serializers.IntegerField(min_value=1, max_value=5)
     housing_type = serializers.ChoiceField(choices=Breed.HousingType.choices)
+
