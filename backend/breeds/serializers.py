@@ -6,9 +6,35 @@ from .models import Breed, Favorite, QuizResult
 
 
 class BreedSerializer(serializers.ModelSerializer):
+    traits = serializers.SerializerMethodField()
+
     class Meta:
         model = Breed
-        fields = "__all__"
+        fields = ("id", "name", "description", "image_url", "traits")
+
+    def get_traits(self, obj: Breed) -> dict[str, dict[str, Any]]:
+        return {
+            "size": {
+                "value": obj.size,
+                "label": obj.get_size_display(),
+            },
+            "energy": {
+                "value": obj.energy,
+                "label": obj.get_energy_display(),
+            },
+            "grooming": {
+                "value": obj.grooming,
+                "label": obj.get_grooming_display(),
+            },
+            "kids_friendly": {
+                "value": obj.kids_friendly,
+                "label": obj.get_kids_friendly_display(),
+            },
+            "housing_type": {
+                "value": obj.housing_type,
+                "label": obj.get_housing_type_display(),
+            },
+        }
 
 
 class QuizResultSerializer(serializers.ModelSerializer):
