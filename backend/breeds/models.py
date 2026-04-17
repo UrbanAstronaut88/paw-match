@@ -28,6 +28,8 @@ class Breed(models.Model):
 
     image_url = models.URLField(blank=True, null=True)
 
+    image = models.ImageField(upload_to="breeds/", blank=True, null=True)
+
     size = models.IntegerField(
         choices=Size.choices
     )
@@ -78,6 +80,3 @@ class QuizResult(models.Model):
     housing_type = models.CharField(max_length=20)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self) -> str:
-        return f"QuizResult {self.id}"

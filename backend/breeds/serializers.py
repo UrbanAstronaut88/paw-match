@@ -10,7 +10,7 @@ class BreedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Breed
-        fields = ("id", "name", "description", "image_url", "traits")
+        fields = ("id", "name", "description", "image_url", "image", "traits")
 
     def get_traits(self, obj: Breed) -> dict[str, dict[str, Any]]:
         return {
