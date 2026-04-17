@@ -13,6 +13,7 @@ class BreedAdmin(admin.ModelAdmin):
         "grooming",
         "kids_friendly",
         "housing_type",
+        "image",
         "image_url",
     )
 
