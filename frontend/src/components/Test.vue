@@ -86,13 +86,16 @@ import vueLogo from "../assets/vue.svg";
         style="margin-bottom: 12px"
       >
         <svg class="size-6 block">
-          <use href="../../icons/icon arrow left.svg"></use>
+          <!-- <use href="/public/icons/icon_arrow-left.svg"></use> -->
+          <use href="../assets/icons/icon_arrow-left.svg"></use>
         </svg>
       </button>
 
+      <!-- <img src="/icons/icon_arrow-left.svg" alt=""> -->
+
       <button class="btn btn-icon btn-primary" style="margin-bottom: 12px">
         <svg class="size-6 block">
-          <use href="../../icons/icon arrow left.svg"></use>
+          <use href="../assets/icons/icon_arrow-left.svg"></use>
         </svg>
       </button>
 
@@ -101,13 +104,13 @@ import vueLogo from "../assets/vue.svg";
       </h2>
       <button class="btn btn-icon btn-icon-secondary" disabled="">
         <svg class="size-6 block">
-          <use href="../../icons/icon arrow right.svg"></use>
+          <use href="../assets/icons/icon_arrow-right.svg"></use>
         </svg>
       </button>
 
       <button class="btn btn-icon btn-icon-secondary">
         <svg class="size-6 block">
-          <use href="../../icons/icon arrow right.svg"></use>
+          <use href="../assets/icons/icon_arrow-right.svg"></use>
         </svg>
       </button>
 
@@ -141,7 +144,7 @@ import vueLogo from "../assets/vue.svg";
 
         <div class="checkbox">
           <svg class="w-4 h-4">
-            <use href="../../icons/ph_check-bold.svg"></use>
+            <use href="../assets/icons/ph_check-bold.svg"></use>
           </svg>
         </div>
       </label>
@@ -151,7 +154,7 @@ import vueLogo from "../assets/vue.svg";
 
         <div class="checkbox">
           <svg class="w-4 h-4">
-            <use href="../../icons/ph_check-bold.svg"></use>
+            <use href="../assets/icons/ph_check-bold.svg"></use>
           </svg>
         </div>
       </label>
@@ -162,7 +165,7 @@ import vueLogo from "../assets/vue.svg";
         <input type="checkbox" class="form-input-hidden" />
         <div class="checkbox-round">
           <svg class="w-4 h-4">
-            <use href="../../icons/ph_check-bold.svg"></use>
+            <use href="../assets/icons/ph_check-bold.svg"></use>
           </svg>
         </div>
       </label>
@@ -176,7 +179,7 @@ import vueLogo from "../assets/vue.svg";
         />
         <div class="checkbox-round" style="margin-top: 12px">
           <svg class="w-4 h-4">
-            <use href="../../icons/ph_check-bold.svg"></use>
+            <use href="../assets/icons/ph_check-bold.svg"></use>
           </svg>
         </div>
       </label>
