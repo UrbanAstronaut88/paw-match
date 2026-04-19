@@ -5,7 +5,10 @@ import vueLogo from "../assets/vue.svg";
 
 import IconArrowLeft from "../assets/icons/icon_arrow-left.svg";
 import IconArrowRight from "../assets/icons/icon_arrow-right.svg";
-import IconButton from "./buttons/IconButton.vue";
+import CheckIcon from "../assets/icons/ph_check-bold.svg";
+import IconButton from "./assets/AppIconButton.vue";
+import RadioButton from "./assets/AppRadioButton.vue";
+import CheckBox from "./assets/AppCheckbox.vue";
 </script>
 
 <template>
@@ -84,86 +87,39 @@ import IconButton from "./buttons/IconButton.vue";
 
       <h2 style="font-size: 24px; margin-bottom: 12px">Icon Button</h2>
 
-      <IconButton class="btn-primary" :icon="IconArrowLeft" />
       <IconButton class="btn-primary" :icon="IconArrowLeft" disabled="" />
 
+      <IconButton class="btn-primary" :icon="IconArrowLeft" />
 
       <h2 style="font-size: 24px; margin-bottom: 12px">
         Secondary Icon Button
       </h2>
-      
-      <IconButton class="btn-primary" :icon="IconArrowRight" />
+
       <IconButton class="btn-primary" :icon="IconArrowRight" disabled="" />
+
+      <IconButton class="btn-primary" :icon="IconArrowRight" />
 
       <h2 style="font-size: 24px; margin-bottom: 12px">Radio Button</h2>
 
-      <label class="flex items-center gap-2" style="margin-bottom: 12px">
-        <input
-          type="radio"
-          name="group1"
-          class="form-input-hidden"
-          checked="true"
-          disabled=""
-        />
-        <div class="radio"></div>
-      </label>
-
-      <label class="flex items-center gap-2" style="margin-bottom: 12px">
-        <input type="radio" name="group1" class="form-input-hidden" />
-        <div class="radio"></div>
-      </label>
+      <RadioButton checked="" disabled="" />
+      <RadioButton />
 
       <h2 style="font-size: 24px; margin-bottom: 12px">Checkbox</h2>
 
-      <label class="flex items-center gap-2 mb-3 cursor-pointer">
-        <input
-          type="checkbox"
-          class="form-input-hidden"
-          checked=""
-          disabled=""
-        />
+      <CheckBox :icon="CheckIcon" disabled="" checked="" />
 
-        <div class="checkbox">
-          <svg class="w-4 h-4">
-            <use href="../assets/icons/ph_check-bold.svg"></use>
-          </svg>
-        </div>
-      </label>
-
-      <label class="flex items-center gap-2 mb-3 cursor-pointer">
-        <input type="checkbox" class="form-input-hidden" checked="" />
-
-        <div class="checkbox">
-          <svg class="w-4 h-4">
-            <use href="../assets/icons/ph_check-bold.svg"></use>
-          </svg>
-        </div>
-      </label>
+      <CheckBox :icon="CheckIcon" />
 
       <h2 style="font-size: 24px; margin-bottom: 12px">Checkbox round</h2>
 
-      <label>
-        <input type="checkbox" class="form-input-hidden" />
-        <div class="checkbox-round">
-          <svg class="w-4 h-4">
-            <use href="../assets/icons/ph_check-bold.svg"></use>
-          </svg>
-        </div>
-      </label>
+      <CheckBox
+        variant="checkbox-round"
+        :icon="CheckIcon"
+        disabled=""
+        checked=""
+      />
 
-      <label>
-        <input
-          type="checkbox"
-          class="form-input-hidden"
-          disabled=""
-          checked=""
-        />
-        <div class="checkbox-round" style="margin-top: 12px">
-          <svg class="w-4 h-4">
-            <use href="../assets/icons/ph_check-bold.svg"></use>
-          </svg>
-        </div>
-      </label>
+      <CheckBox variant="checkbox-round" :icon="CheckIcon" />
     </div>
   </section>
 </template>
