@@ -2,6 +2,10 @@
 import viteLogo from "../assets/vite.svg";
 import heroImg from "../assets/hero.png";
 import vueLogo from "../assets/vue.svg";
+
+import IconArrowLeft from "../assets/icons/icon_arrow-left.svg";
+import IconArrowRight from "../assets/icons/icon_arrow-right.svg";
+import IconButton from "./buttons/IconButton.vue";
 </script>
 
 <template>
@@ -80,39 +84,16 @@ import vueLogo from "../assets/vue.svg";
 
       <h2 style="font-size: 24px; margin-bottom: 12px">Icon Button</h2>
 
-      <button
-        class="btn btn-icon btn-primary"
-        disabled=""
-        style="margin-bottom: 12px"
-      >
-        <svg class="size-6 block">
-          <!-- <use href="/public/icons/icon_arrow-left.svg"></use> -->
-          <use href="../assets/icons/icon_arrow-left.svg"></use>
-        </svg>
-      </button>
+      <IconButton class="btn-primary" :icon="IconArrowLeft" />
+      <IconButton class="btn-primary" :icon="IconArrowLeft" disabled="" />
 
-      <!-- <img src="/icons/icon_arrow-left.svg" alt=""> -->
-
-      <button class="btn btn-icon btn-primary" style="margin-bottom: 12px">
-        <svg class="size-6 block">
-          <use href="../assets/icons/icon_arrow-left.svg"></use>
-        </svg>
-      </button>
 
       <h2 style="font-size: 24px; margin-bottom: 12px">
         Secondary Icon Button
       </h2>
-      <button class="btn btn-icon btn-icon-secondary" disabled="">
-        <svg class="size-6 block">
-          <use href="../assets/icons/icon_arrow-right.svg"></use>
-        </svg>
-      </button>
-
-      <button class="btn btn-icon btn-icon-secondary">
-        <svg class="size-6 block">
-          <use href="../assets/icons/icon_arrow-right.svg"></use>
-        </svg>
-      </button>
+      
+      <IconButton class="btn-primary" :icon="IconArrowRight" />
+      <IconButton class="btn-primary" :icon="IconArrowRight" disabled="" />
 
       <h2 style="font-size: 24px; margin-bottom: 12px">Radio Button</h2>
 
