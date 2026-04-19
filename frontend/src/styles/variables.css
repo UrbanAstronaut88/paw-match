@@ -35,6 +35,7 @@
 
   /* colors */
   --color-primary: #ff682e;
+  --color-additional: #fff4f0;
 
   --color-gray-100: #0d0d0e;
   --color-gray-80: #484952;
@@ -43,6 +44,11 @@
   --color-gray-20: #eff0f3;
   --color-gray-10: #f6f7f9;
   --color-white: #ffffff;
+
+  --color-size-bar: #ad6a0a;
+  --color-activity-bar: #fcbd18;
+  --color-care-bar: #14b46e;
+  --color-children-bar: #5274e4;
 
   --color-error: #eb2435;
   --color-info: #4abde4;
