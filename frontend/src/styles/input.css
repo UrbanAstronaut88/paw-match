@@ -1,0 +1,101 @@
+@utility input-label {
+  font-family: var(--font-primary);
+  font-size: var(--text-h3);
+  font-weight: var(--text-h3--font-weight);
+  color: var(--color-gray-100);
+}
+
+@utility input-wrapper {
+  @apply flex items-center gap-2;
+  background-color: var(--color-gray-20);
+  border: 1px solid transparent;
+  border-radius: 100px;
+  padding: 17px 16px;
+  height: 52px;
+  width: 411px;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: var(--color-primary);
+  }
+
+  &.input-error:not(:has(input:disabled)) {
+    border-color: var(--color-error);
+  }
+
+  &.input-success:not(:has(input:disabled)) {
+    border-color: var(--color-success);
+  }
+
+  &.input-hover:not(:has(input:disabled)) {
+    border-color: var(--color-gray-30);
+  }
+
+  &:has(input:disabled) {
+    cursor: not-allowed;
+    background-color: var(--color-gray-10);
+
+    button {
+      cursor: not-allowed;
+      pointer-events: none;
+      color: var(--color-gray-30);
+    }
+  }
+}
+
+@utility input {
+  @apply flex-1 bg-transparent outline-none;
+  font-family: var(--font-primary);
+  font-weight: var(--text-secondary--font-weight);
+  font-size: var(--text-secondary);
+  color: var(--color-gray-100);
+
+  &::placeholder {
+    color: var(--color-gray-60);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:disabled::placeholder {
+    color: var(--color-gray-30);
+  }
+}
+
+@utility otp-input {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background-color: var(--color-gray-20);
+  text-align: center;
+  font-family: var(--font-primary);
+  font-size: var(--text-main);
+  font-weight: var(--text-main--font-weight);
+  color: var(--color-gray-100);
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: var(--color-primary);
+  }
+
+  &:hover:not(:focus):not(:disabled) {
+    border-color: var(--color-gray-30);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--color-gray-30);
+    background-color: var(--color-gray-10);
+  }
+
+  &.input-error:not(:disabled) {
+    border-color: var(--color-error);
+  }
+
+  &.input-success:not(:disabled) {
+    border-color: var(--color-success);
+  }
+}

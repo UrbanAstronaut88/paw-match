@@ -53,6 +53,13 @@ class Breed(models.Model):
 
     description = models.TextField(blank=True, null=True)
 
+    comparison_description = models.TextField(
+        max_length=435,
+        blank=True,
+        null=True,
+        help_text="Short Comparison description for the breed"
+    )
+
     def __str__(self):
         return self.name
 

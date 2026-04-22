@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from breeds.views import (
     BreedViewSet,
     MatchView,
+    BreedCompareView,
     AddFavoriteView,
     RemoveFavoriteView,
     QuizResultViewSet,
@@ -35,6 +36,12 @@ urlpatterns = [
         "favorites/",
         FavoriteListView.as_view(),
         name="favorites"
+    ),
+
+    path(
+        "breeds/compare/",
+        BreedCompareView.as_view(),
+        name="breed-compare"
     ),
 ]
 

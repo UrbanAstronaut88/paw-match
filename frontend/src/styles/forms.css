@@ -1,0 +1,91 @@
+@utility form-input-hidden {
+  @apply sr-only;
+}
+
+@utility radio {
+  @apply flex items-center justify-center border-2 transition-all cursor-pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+
+  &::after {
+    content: "";
+    @apply rounded-full scale-0 transition-transform;
+    width: 10px;
+    height: 10px;
+    background-color: var(--color-primary);
+  }
+
+  .form-input-hidden:checked + & {
+    border-color: var(--color-primary);
+    &::after {
+      @apply scale-100;
+    }
+  }
+
+  .form-input-hidden:disabled + & {
+    border-color: var(--color-gray-30);
+    cursor: not-allowed;
+
+    &::after {
+      background-color: var(--color-gray-30);
+    }
+  }
+}
+
+@utility checkbox {
+  @apply flex items-center justify-center border-2 transition-all cursor-pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border-color: var(--color-gray-60);
+  background-color: var(--color-white);
+  color: var(--color-white);
+
+  .form-input-hidden:checked + & {
+    background-color: transparent;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .form-input-hidden:disabled + & {
+    color: transparent;
+    border-color: var(--color-gray-30);
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+
+  .form-input-hidden:checked:disabled + & {
+    color: var(--color-gray-30);
+    border-color: var(--color-gray-30);
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+}
+
+@utility checkbox-round {
+  @apply flex items-center justify-center border-2 rounded-full transition-all cursor-pointer;
+  width: 32px;
+  height: 32px;
+  border-color: var(--color-gray-60);
+  color: transparent;
+
+  .form-input-hidden:checked + & {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .form-input-hidden:disabled + & {
+    border-color: var(--color-gray-30);
+    cursor: not-allowed;
+  }
+
+  .form-input-hidden:checked:disabled + & {
+    background-color: var(--color-gray-30);
+    border-color: var(--color-gray-30);
+    color: var(--color-white);
+  }
+}

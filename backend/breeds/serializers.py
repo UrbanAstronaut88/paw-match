@@ -10,7 +10,7 @@ class BreedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Breed
-        fields = ("id", "name", "description", "image_url", "image", "traits")
+        fields = ("id", "name", "description", "image_url", "image", "comparison_description", "traits")
 
     def get_traits(self, obj: Breed) -> dict[str, dict[str, Any]]:
         return {
@@ -35,6 +35,12 @@ class BreedSerializer(serializers.ModelSerializer):
                 "label": obj.get_housing_type_display(),
             },
         }
+
+
+class BreedComparisonSerializer(serializers.Serializer):
+    first_breed = BreedSerializer()
+    second_breed = BreedSerializer()
+    comparison = serializers.DictField(child=serializers.CharField())
 
 
 class QuizResultSerializer(serializers.ModelSerializer):
@@ -65,4 +71,3 @@ class MatchRequestSerializer(serializers.Serializer):
     energy = serializers.IntegerField(min_value=1, max_value=5)
     kids = serializers.IntegerField(min_value=1, max_value=5)
     housing_type = serializers.ChoiceField(choices=Breed.HousingType.choices)
-
