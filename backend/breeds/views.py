@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -11,12 +11,13 @@ from rest_framework.views import APIView
 
 from .models import Breed, Favorite, QuizResult
 from .serializers import (
+    BreedComparisonSerializer,
     BreedSerializer,
     FavoriteSerializer,
     MatchRequestSerializer,
     QuizResultSerializer,
 )
-from .services.matching import get_best_matches
+from .services.matching import compare_breeds, get_best_matches
 
 
 class BreedViewSet(viewsets.ReadOnlyModelViewSet):
@@ -60,6 +61,48 @@ class MatchView(APIView):
         ]
 
         return Response(result, status=status.HTTP_200_OK)
+
+
+class BreedCompareView(APIView):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="first",
+                type=int,
+                required=True,
+                description="First breed ID"
+            ),
+            OpenApiParameter(
+                name="second",
+                type=int,
+                required=True,
+                description="Second breed ID"
+            ),
+        ],
+        responses={200: BreedComparisonSerializer},
+        description="Compare two dog breeds by their main traits",
+    )
+    def get(self, request: Request) -> Response:
+        first_id: str | None = request.query_params.get("first")
+        second_id: str | None = request.query_params.get("second")
+
+        if first_id is None or second_id is None:
+            return Response(
+                {"detail": "Both 'first' and 'second' query parameters are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        first_breed: Breed = get_object_or_404(Breed, pk=first_id)
+        second_breed: Breed = get_object_or_404(Breed, pk=second_id)
+
+        result: dict = {
+            "first_breed": first_breed,
+            "second_breed": second_breed,
+            "comparison": compare_breeds(first_breed, second_breed),
+        }
+
+        serializer: BreedComparisonSerializer = BreedComparisonSerializer(result)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AddFavoriteView(APIView):

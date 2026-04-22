@@ -1,4 +1,4 @@
-from typing import Dict, List, TypedDict
+from typing import Any, Dict, List, TypedDict
 
 from breeds.models import Breed
 
@@ -41,31 +41,27 @@ def housing_match(user_value: str, breed_value: str) -> float:
     return 0.5
 
 
-def calculate_score(user_data: Dict, breed: Breed):
+def calculate_score(user_data: Dict[str, Any], breed: Breed) -> tuple[float, Dict[str, float]]:
     score: float = 0.0
     details: Dict[str, float] = {}
 
-    # SIZE (1–3)
-    size_diff = normalize_difference(user_data["size"], breed.size, 3)
-    size_score = WEIGHTS["size"] * size_diff
+    size_diff: float = normalize_difference(user_data["size"], breed.size, 3)
+    size_score: float = WEIGHTS["size"] * size_diff
     score += size_score
     details["size"] = round((1 - size_diff) * 100, 2)
 
-    # ENERGY (1–5)
-    energy_diff = normalize_difference(user_data["energy"], breed.energy, 5)
-    energy_score = WEIGHTS["energy"] * energy_diff
+    energy_diff: float = normalize_difference(user_data["energy"], breed.energy, 5)
+    energy_score: float = WEIGHTS["energy"] * energy_diff
     score += energy_score
     details["energy"] = round((1 - energy_diff) * 100, 2)
 
-    # KIDS (1–5)
-    kids_diff = normalize_difference(user_data["kids"], breed.kids_friendly, 5)
-    kids_score = WEIGHTS["kids"] * kids_diff
+    kids_diff: float = normalize_difference(user_data["kids"], breed.kids_friendly, 5)
+    kids_score: float = WEIGHTS["kids"] * kids_diff
     score += kids_score
     details["kids"] = round((1 - kids_diff) * 100, 2)
 
-    # HOUSING (categorical)
-    housing_diff = housing_match(user_data["housing_type"], breed.housing_type)
-    housing_score = WEIGHTS["housing"] * housing_diff
+    housing_diff: float = housing_match(user_data["housing_type"], breed.housing_type)
+    housing_score: float = WEIGHTS["housing"] * housing_diff
     score += housing_score
     details["housing"] = 100 if housing_diff == 0 else 50
 
@@ -75,27 +71,25 @@ def calculate_score(user_data: Dict, breed: Breed):
 def calculate_match_percentage(score: float) -> float:
     """
     Convert score to percentage (0–100%)
-    The lower the score, the better
+    The lower the score, the better.
     """
 
-    normalized = score / MAX_SCORE
-    match = (1 - normalized) * 100
+    normalized: float = score / MAX_SCORE
+    match: float = (1 - normalized) * 100
 
     return round(match, 2)
 
 
 def get_best_matches(
-    user_data: Dict,
+    user_data: Dict[str, Any],
     breeds_queryset,
     limit: int = 5
 ) -> List[MatchResult]:
-
     results: List[MatchResult] = []
 
     for breed in breeds_queryset:
         score, details = calculate_score(user_data, breed)
-
-        match_percent = calculate_match_percentage(score)
+        match_percent: float = calculate_match_percentage(score)
 
         results.append({
             "breed": breed,
@@ -107,3 +101,63 @@ def get_best_matches(
     results = sorted(results, key=lambda x: x["score"])
 
     return results[:limit]
+
+
+def compare_breeds(first_breed: Breed, second_breed: Breed) -> Dict[str, str]:
+    comparison: Dict[str, str] = {
+        "size": compare_size(first_breed, second_breed),
+        "energy": compare_energy(first_breed, second_breed),
+        "grooming": compare_grooming(first_breed, second_breed),
+        "kids_friendly": compare_kids_friendly(first_breed, second_breed),
+        "housing_type": compare_housing(first_breed, second_breed),
+    }
+
+    return comparison
+
+
+def compare_size(first_breed: Breed, second_breed: Breed) -> str:
+    if first_breed.size > second_breed.size:
+        return f"{first_breed.name} is larger."
+    if first_breed.size < second_breed.size:
+        return f"{second_breed.name} is larger."
+    return "Both breeds are similar in size."
+
+
+def compare_energy(first_breed: Breed, second_breed: Breed) -> str:
+    if first_breed.energy > second_breed.energy:
+        return f"{first_breed.name} is more active."
+    if first_breed.energy < second_breed.energy:
+        return f"{second_breed.name} is more active."
+    return "Both breeds have similar activity levels."
+
+
+def compare_grooming(first_breed: Breed, second_breed: Breed) -> str:
+    if first_breed.grooming > second_breed.grooming:
+        return f"{first_breed.name} requires more grooming."
+    if first_breed.grooming < second_breed.grooming:
+        return f"{second_breed.name} requires more grooming."
+    return "Both breeds require similar grooming."
+
+
+def compare_kids_friendly(first_breed: Breed, second_breed: Breed) -> str:
+    if first_breed.kids_friendly > second_breed.kids_friendly:
+        return f"{first_breed.name} is better with children."
+    if first_breed.kids_friendly < second_breed.kids_friendly:
+        return f"{second_breed.name} is better with children."
+    return "Both breeds are similarly good with children."
+
+
+def compare_housing(first_breed: Breed, second_breed: Breed) -> str:
+    apartment_friendly_values: set[str] = {
+        Breed.HousingType.APARTMENT,
+        Breed.HousingType.BOTH,
+    }
+
+    first_apartment_friendly: bool = first_breed.housing_type in apartment_friendly_values
+    second_apartment_friendly: bool = second_breed.housing_type in apartment_friendly_values
+
+    if first_apartment_friendly and not second_apartment_friendly:
+        return f"{first_breed.name} is more suitable for apartment living."
+    if second_apartment_friendly and not first_apartment_friendly:
+        return f"{second_breed.name} is more suitable for apartment living."
+    return "Both breeds have similar housing requirements."
