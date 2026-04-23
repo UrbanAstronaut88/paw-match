@@ -1,0 +1,13 @@
+@utility article-section {
+  @apply flex flex-col justify-between rounded-2xl p-8 bg-gray-10;
+  width: 632px;
+}
+
+@utility article-section-header {
+  @apply flex items-start justify-between;
+}
+
+@utility article-section-header-text {
+  @apply flex flex-col gap-4;
+}
+
