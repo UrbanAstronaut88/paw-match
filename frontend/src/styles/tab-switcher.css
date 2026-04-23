@@ -1,0 +1,9 @@
+@utility tab-switcher-item {
+  @apply relative z-10 flex-1 flex items-center justify-center cursor-pointer outline-none border-none bg-transparent font-primary text-btn text-gray-100 rounded-btn;
+
+  transition: color 0.15s ease;
+}
+
+@utility tab-switcher-item--active {
+  color: var(--color-white);
+}
