@@ -1,0 +1,50 @@
+@utility quiz-hero {
+  @apply flex flex-col w-full bg-gray-10  rounded-2xl p-8;
+  max-width: 632px;
+  height: 712px;
+}
+
+@utility quiz-hero-header {
+  @apply flex flex-col gap-4;
+}
+
+@utility quiz-hero-title {
+  @apply text-h1 font-primary text-gray-100;
+}
+
+@utility quiz-hero-description {
+  @apply text-main font-primary text-gray-100;
+  max-width: 322px;
+}
+
+@utility quiz-hero-image-wrapper {
+  @apply w-full bg-gray-20 my-6;
+
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 376px;
+}
+
+@utility quiz-hero-image {
+  @apply block w-full h-full object-cover;
+}
+
+@utility quiz-hero-image-placeholder {
+  @apply text-gray-10;
+}
+
+@utility quiz-hero-features {
+  @apply flex items-start mb-8;
+}
+
+@utility quiz-hero-feature {
+  @apply flex flex-col items-center gap-2 pr-8;
+}
+
+@utility quiz-hero-feature-icon {
+  @apply text-gray-100 w-4 h-4;
+}
+
+@utility quiz-hero-feature-label {
+  @apply text-center text-secondary font-primary text-gray-100;
+}
