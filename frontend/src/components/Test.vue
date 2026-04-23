@@ -1,61 +1,78 @@
 <script setup>
-import viteLogo from "../assets/vite.svg";
-import heroImg from "../assets/hero.png";
-import vueLogo from "../assets/vue.svg";
-import AppPasswordInput from "./assets/AppPasswordInput.vue";
-import AppOtpInput from "./assets/AppOtpInput.vue";
+import CardDogImg from "../assets/card_dog.png";
+import ArticleSection from "./ArticleSection.vue";
+import AppArticleCards from "./assets/AppArticleCards.vue";
+import AppBreedCard from "./assets/AppBreedCard.vue";
+import AppBreedStats from "./assets/AppBreedStats.vue";
+import AppFavoritesMiniCards from "./assets/AppFavoritesMiniCards.vue";
+import Header from "./Header.vue";
+import QuizHero from "./QuizHero.vue";
+
+import mopsImg from "../assets/mops_card.png";
+import shitsuImg from "../assets/shi-tsu_card.png";
+import AppTabSwitcher from "./assets/AppTabSwitcher.vue";
+
+import { ref } from "vue";
+import AppHomeTag from "./assets/AppHomeTag.vue";
+import AppQuizStepDivider from "./assets/AppQuizStepDivider.vue";
+const activeTab = ref(0);
 </script>
 
 <template>
-  <div class="input">
-    <AppPasswordInput label="Введіть пароль" />
-  </div>
+  <QuizHero class="component" :image="CardDogImg" />
 
-  <div class="input">
-    <AppPasswordInput
-      class="input-success"
-      label="Введіть пароль"
-      disabled=""
-    />
-  </div>
+  <ArticleSection
+    class="component"
+    title="Світ улюбленців"
+    description="Статті про собак — від вибору до догляду та розуміння поведінки"
+    description-style="w-[446px]"
+  >
+    <AppArticleCards />
+  </ArticleSection>
 
-  <div class="input">
-    <AppPasswordInput class="input-success" label="Введіть пароль" />
-  </div>
+  <ArticleSection
+    class="component"
+    title="Улюблені породи"
+    description="Тут зібрані всі породи, які тобі сподобались"
+  >
+    <AppFavoritesMiniCards />
+  </ArticleSection>
 
-  <div class="input">
-    <AppPasswordInput class="input-error" label="Введіть пароль" />
-  </div>
+  <ArticleSection
+    class="component"
+    title="1. Як підготуватись до появи собаки?"
+    description="Що потрібно купити, як облаштувати простір і підготувати дім до нового улюбленця. Розбираємо базові речі, які допоможуть зробити перехід для собаки комфортним і без стресу — від першого лежака до безпечного дому."
+    contentGap="gap-6"
+    titleStyle="text-h2 font-primary text-gray-100"
+    description-style="text-secondary font-primary text-gray-80"
+  />
 
-  <div class="input">
-    <AppOtpInput label="Код був надісланий на вашу адресу" />
-  </div>
+  <AppBreedStats class="component" />
 
-  <div class="input">
-    <AppOtpInput
-      class="input-success"
-      label="Код був надісланий на вашу адресу"
-      disabled=""
-    />
-  </div>
+  <AppTabSwitcher v-model="activeTab" :tabs="['бульдог', 'мопс']" />
 
-  <div class="input">
-    <AppOtpInput
-      class="input-success"
-      label="Код був надісланий на вашу адресу"
-    />
-  </div>
+  <AppBreedCard
+    title="Французький бульдог"
+    :image="shitsuImg"
+    class="m-10"
+    v-if="activeTab === 0"
+  />
+  <AppBreedCard
+    title="Мопс"
+    :image="mopsImg"
+    size="big"
+    class="component"
+    v-if="activeTab === 1"
+  />
 
-  <div class="input">
-    <AppOtpInput
-      class="input-error"
-      label="Код був надісланий на вашу адресу"
-    />
-  </div>
+  <AppHomeTag class="component" type="apartment" />
+  <AppHomeTag class="component" />
+
+  <AppQuizStepDivider :current="1" :total="7" class="component" />
 </template>
 
 <style>
-.input {
-  padding: 15px;
+.component {
+  margin-top: 16px;
 }
 </style>
