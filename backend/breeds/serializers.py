@@ -10,7 +10,14 @@ class BreedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Breed
-        fields = ("id", "name", "description", "image_url", "image", "comparison_description", "traits")
+        fields = (
+            "id",
+            "name",
+            "description",
+            "image_url",
+            "image",
+            "traits",
+        )
 
     def get_traits(self, obj: Breed) -> dict[str, dict[str, Any]]:
         return {
@@ -37,10 +44,74 @@ class BreedSerializer(serializers.ModelSerializer):
         }
 
 
+class BreedCompareCardSerializer(serializers.ModelSerializer):
+    image_src = serializers.SerializerMethodField()
+    traits = serializers.SerializerMethodField()
+    housing = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Breed
+        fields = (
+            "id",
+            "name",
+            "image_src",
+            "traits",
+            "housing",
+        )
+
+    def get_image_src(self, obj: Breed) -> str | None:
+        if obj.image:
+            request = self.context.get("request")
+
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+
+            return obj.image.url
+
+        return obj.image_url
+
+    def get_traits(self, obj: Breed) -> dict[str, dict[str, Any]]:
+        return {
+            "size": {
+                "label": "Розмір",
+                "value": obj.size,
+                "max": 3,
+                "display": obj.get_size_display(),
+            },
+            "energy": {
+                "label": "Рівень активності",
+                "value": obj.energy,
+                "max": 5,
+                "display": obj.get_energy_display(),
+            },
+            "grooming": {
+                "label": "Складність догляду",
+                "value": obj.grooming,
+                "max": 5,
+                "display": obj.get_grooming_display(),
+            },
+            "kids_friendly": {
+                "label": "Підходить для сімей з дітьми",
+                "value": obj.kids_friendly,
+                "max": 5,
+                "display": obj.get_kids_friendly_display(),
+            },
+        }
+
+    def get_housing(self, obj: Breed) -> list[str]:
+        if obj.housing_type == Breed.HousingType.APARTMENT:
+            return ["Квартира"]
+
+        if obj.housing_type == Breed.HousingType.HOUSE:
+            return ["Дім"]
+
+        return ["Квартира", "Дім"]
+
+
 class BreedComparisonSerializer(serializers.Serializer):
-    first_breed = BreedSerializer()
-    second_breed = BreedSerializer()
-    comparison = serializers.DictField(child=serializers.CharField())
+    first_breed = BreedCompareCardSerializer()
+    second_breed = BreedCompareCardSerializer()
+    conclusion = serializers.CharField()
 
 
 class QuizResultSerializer(serializers.ModelSerializer):
