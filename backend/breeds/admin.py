@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Breed
+from .models import Breed, BreedComparison
 
 
 @admin.register(Breed)
@@ -14,7 +14,6 @@ class BreedAdmin(admin.ModelAdmin):
         "kids_friendly",
         "housing_type",
         "image",
-        "comparison_description",
     )
 
     list_filter = (
@@ -26,3 +25,9 @@ class BreedAdmin(admin.ModelAdmin):
     )
 
     search_fields = ("name",)
+
+
+@admin.register(BreedComparison)
+class BreedComparisonAdmin(admin.ModelAdmin):
+    list_display = ("first_breed", "second_breed")
+    search_fields = ("first_breed__name", "second_breed__name", "conclusion")

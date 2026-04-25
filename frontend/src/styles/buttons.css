@@ -137,8 +137,7 @@
 
 @utility btn-icon {
   padding: 0;
-  width: 52px;
-  height: 52px;
-  min-width: unset;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
 }

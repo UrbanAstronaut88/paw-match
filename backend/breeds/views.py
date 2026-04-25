@@ -9,7 +9,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Breed, Favorite, QuizResult
+from .models import Breed, Favorite, QuizResult, BreedComparison
 from .serializers import (
     BreedComparisonSerializer,
     BreedSerializer,
@@ -80,28 +80,58 @@ class BreedCompareView(APIView):
             ),
         ],
         responses={200: BreedComparisonSerializer},
-        description="Compare two dog breeds by their main traits",
+        description="Compare two dog breeds for frontend comparison page",
     )
     def get(self, request: Request) -> Response:
         first_id: str | None = request.query_params.get("first")
         second_id: str | None = request.query_params.get("second")
 
-        if first_id is None or second_id is None:
+        if not first_id or not second_id:
             return Response(
                 {"detail": "Both 'first' and 'second' query parameters are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if first_id == second_id:
+            return Response(
+                {"detail": "Please select two different breeds for comparison."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         first_breed: Breed = get_object_or_404(Breed, pk=first_id)
         second_breed: Breed = get_object_or_404(Breed, pk=second_id)
 
+        comparison: BreedComparison | None = BreedComparison.objects.filter(
+            first_breed=first_breed,
+            second_breed=second_breed,
+        ).first()
+
+        if comparison is None:
+            comparison = BreedComparison.objects.filter(
+                first_breed=second_breed,
+                second_breed=first_breed,
+            ).first()
+
+        conclusion: str = (
+            comparison.conclusion
+            if comparison
+            else (
+                f"{first_breed.name} і {second_breed.name} — це різні породи "
+                "з унікальними характеристиками."
+            )
+        )
+
         result: dict = {
             "first_breed": first_breed,
             "second_breed": second_breed,
-            "comparison": compare_breeds(first_breed, second_breed),
+            "conclusion": conclusion,
         }
 
-        serializer: BreedComparisonSerializer = BreedComparisonSerializer(result)
+        serializer: BreedComparisonSerializer = BreedComparisonSerializer(
+            result,
+            context={"request": request},
+        )
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
