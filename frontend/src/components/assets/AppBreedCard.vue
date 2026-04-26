@@ -32,7 +32,7 @@ function toggleLike() {
 
       <div
         class="flex flex-col"
-        :class="size === 'big' ? 'pt-4 gap-8' : 'pt-3 gap-6'"
+        :class="size === 'big' ? 'pt-6 gap-8' : 'pt-4 gap-6'"
       >
         <div class="flex items-center justify-between">
           <span
