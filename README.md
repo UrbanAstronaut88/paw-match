@@ -8,12 +8,15 @@ The application analyzes user parameters (living space, activity level, presence
 
 ##  Features
 
--  Dog breeds database
+-  Dog breeds database (15 breeds)
 -  Smart breed recommendation algorithm
 -  Quiz-based matching system
 -  Favorites list for authenticated users
 -  Quiz results history
 -  JWT Authentication
+-  User profile (name, city, age, avatar)
+-  Password change
+-  Breed comparison system (NEW)
 -  REST API for frontend integration
 
 ---
@@ -33,7 +36,7 @@ User provides:
 
 ---
 
-###  Algorithm Logic
+### ️ Algorithm Logic
 
 Each breed is evaluated using a **weighted scoring system**.
 
@@ -46,145 +49,107 @@ Each breed is evaluated using a **weighted scoring system**.
 | kids     | 2.0    |
 | housing  | 2.5    |
 
+###  Formula
+**score = Σ (weight × normalized_difference)**
 - Lower score → better match
-- Final result is converted into **match percentage (0–100%)**
+- Result converted to **match percentage (0–100%)**
 
 ---
 
-##  API Overview
+## Breed Comparison (NEW)
 
-###  Authentication
-
-- `POST /api/v1/auth/register/`
-- `POST /api/v1/auth/login/`
-- `POST /api/v1/auth/logout/`
-- `GET /api/v1/auth/me/`
+Compare two dog breeds side-by-side with UI-ready data.
 
 ---
 
-###  Breeds
-
-- `GET /api/v1/breeds/`
-- `GET /api/v1/breeds/{id}/`
-
----
-
-###  Matching
-
-- `POST /api/v1/match/`
-
-➡ Returns best matching breeds  
-➡ Automatically saves quiz result (if user is authenticated)
+# Features
+* Progress bar ready (value / max)
+* Labels for UI
+* Housing chips
+* Custom comparison text from DB (via matrix)
 
 ---
 
-###  Favorites
+# Authentication
+* POST /api/v1/auth/register/
+* POST /api/v1/auth/login/
+* POST /api/v1/auth/logout/
+* POST /api/v1/auth/refresh/
 
-- `POST /api/v1/breeds/{id}/favorite/`
-- `DELETE /api/v1/breeds/{id}/unfavorite/`
-- `GET /api/v1/favorites/`
 
----
+# User Profile
+* GET /api/v1/auth/me/
+* PATCH /api/v1/auth/me/ (update profile + avatar upload)
+* PATCH /api/v1/auth/change-password/
 
-###  Quiz Results
 
-- `GET /api/v1/quiz-results/`
-- `GET /api/v1/quiz-results/{id}/`
-- `POST /api/v1/quiz-results/`
+# Breeds
+* GET /api/v1/breeds/
+* GET /api/v1/breeds/{id}/
 
-Update/delete operations are intentionally disabled (immutable history)
+# Matching
+* POST /api/v1/match/
 
----
 
-##  Database Models (Simplified)
-
-### Breed
-
-- `name`
-- `description`
-- `image_url`
-- `size`
-- `energy`
-- `grooming`
-- `kids_friendly`
-- `housing_type`
+# Favorites
+* POST /api/v1/breeds/{id}/favorite/
+* DELETE /api/v1/breeds/{id}/unfavorite/
+* GET /api/v1/favorites/
 
 ---
 
-### Favorite
-
-- `user`
-- `breed`
-
----
-
-### QuizResult
-
-- `user`
-- `size`
-- `energy`
-- `kids`
-- `housing_type`
-- `created_at`
-
----
-
-## Tech Stack
-
-### Backend:
-
+# Tech Stack
+### Backend
 - Python 3.12
 - Django
 - Django REST Framework
 - PostgreSQL
 - Django ORM
 
-### Frontend:
+### Frontend
+- Vue 3 (Composition API)
+- Pinia
+- Vite
+- Tailwind CSS
+- Axios
 
-* Vue 3 (Composition API)
-* Pinia
-* Vite
-* Tailwind CSS
-* Axios
-
----
-
-## Infrastructure
-
+# Infrastructure
 - Docker
 - Docker Compose
 - JWT Authentication
 
 ---
 
-## Tools
-
-- Git / GitHub
-- Postman
-
----
-
-## Setup (Development)
-
-### 1. Clone repository
-
-```bash
+# Setup (Development)
+1) Clone the repository
+```
 git clone https://github.com/UrbanAstronaut88/paw-match
 ```
 
-### 2. Run Project
+2) Run project
 ```
-cd paw-match
+cd paw-match/backend
 docker-compose up --build
-
-docker compose exec web python manage.py createsuperuser
 ```
 
+3) Create Superuser
+```
+docker-compose exec web python manage.py createsuperuser
+```
 
-## Team Roles (Concept)
-* Backend Developer – API, database, matching logic
+# API docs
+### Swagger UI
+http://127.0.0.1:8000/api/docs/
+
+---
+
+
+# Team Roles
+* Backend Developer – API, database, matching logic 
 * Frontend Developer – UI, quiz interface
 * QA Engineer – testing & validation
 * Designer – UX/UI
-* Data Analyst – analytics & insights
+* Data Analyst – analytics, content
 * Project Manager – coordination
+
+

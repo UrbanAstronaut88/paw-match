@@ -53,13 +53,6 @@ class Breed(models.Model):
 
     description = models.TextField(blank=True, null=True)
 
-    comparison_description = models.TextField(
-        max_length=435,
-        blank=True,
-        null=True,
-        help_text="Short Comparison description for the breed"
-    )
-
     def __str__(self):
         return self.name
 
@@ -87,3 +80,23 @@ class QuizResult(models.Model):
     housing_type = models.CharField(max_length=20)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class BreedComparison(models.Model):
+    first_breed = models.ForeignKey(
+        Breed,
+        on_delete=models.CASCADE,
+        related_name="comparisons_as_first"
+    )
+    second_breed = models.ForeignKey(
+        Breed,
+        on_delete=models.CASCADE,
+        related_name="comparisons_as_second"
+    )
+    conclusion = models.TextField(max_length=450)
+
+    class Meta:
+        unique_together = ("first_breed", "second_breed")
+
+    def __str__(self) -> str:
+        return f"{self.first_breed.name} vs {self.second_breed.name}"
