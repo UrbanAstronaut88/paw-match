@@ -16,40 +16,10 @@ import PawIcon from "../assets/icons/big-paw.svg";
 import { ref } from "vue";
 import AppHomeTag from "./assets/AppHomeTag.vue";
 import AppQuizStepDivider from "./assets/AppQuizStepDivider.vue";
-import { listBreeds } from "../api/breeds";
 const activeTab = ref(0);
-
-const breedsResponse = ref(null);
-const breedsError = ref(null);
-
-async function loadBreeds() {
-  breedsError.value = null;
-  try {
-    breedsResponse.value = await listBreeds({ page_size: 1 });
-  } catch (e) {
-    breedsError.value = e?.message ?? String(e);
-  }
-}
 </script>
 
 <template>
-  <!-- <section class="component">
-    <button
-      class="px-4 py-2 rounded bg-gray-100 text-black"
-      @click="loadBreeds"
-    >
-      Test API: load breeds
-    </button>
-    <pre
-      v-if="breedsResponse"
-      class="mt-2 p-2 bg-gray-900 text-white rounded overflow-auto"
-      >{{ breedsResponse }}</pre
-    >
-    <p v-if="breedsError" class="mt-2 text-red-600">
-      API error: {{ breedsError }}
-    </p>
-  </section> -->
-
   <QuizHero class="component" :image="CardDogImg" />
 
   <ArticleSection
