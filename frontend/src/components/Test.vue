@@ -33,8 +33,6 @@ async function loadBreeds() {
 </script>
 
 <template>
-  <QuizHero class="component" :image="CardDogImg" />
-
   <!-- <section class="component">
     <button
       class="px-4 py-2 rounded bg-gray-100 text-black"
@@ -51,6 +49,8 @@ async function loadBreeds() {
       API error: {{ breedsError }}
     </p>
   </section> -->
+
+  <QuizHero class="component" :image="CardDogImg" />
 
   <ArticleSection
     class="component"
