@@ -11,15 +11,46 @@ import QuizHero from "./QuizHero.vue";
 import mopsImg from "../assets/mops_card.png";
 import shitsuImg from "../assets/shi-tsu_card.png";
 import AppTabSwitcher from "./assets/AppTabSwitcher.vue";
+import PawIcon from "../assets/icons/big-paw.svg";
 
 import { ref } from "vue";
 import AppHomeTag from "./assets/AppHomeTag.vue";
 import AppQuizStepDivider from "./assets/AppQuizStepDivider.vue";
+import { listBreeds } from "../api/breeds";
 const activeTab = ref(0);
+
+const breedsResponse = ref(null);
+const breedsError = ref(null);
+
+async function loadBreeds() {
+  breedsError.value = null;
+  try {
+    breedsResponse.value = await listBreeds({ page_size: 1 });
+  } catch (e) {
+    breedsError.value = e?.message ?? String(e);
+  }
+}
 </script>
 
 <template>
   <QuizHero class="component" :image="CardDogImg" />
+
+  <!-- <section class="component">
+    <button
+      class="px-4 py-2 rounded bg-gray-100 text-black"
+      @click="loadBreeds"
+    >
+      Test API: load breeds
+    </button>
+    <pre
+      v-if="breedsResponse"
+      class="mt-2 p-2 bg-gray-900 text-white rounded overflow-auto"
+      >{{ breedsResponse }}</pre
+    >
+    <p v-if="breedsError" class="mt-2 text-red-600">
+      API error: {{ breedsError }}
+    </p>
+  </section> -->
 
   <ArticleSection
     class="component"
@@ -52,7 +83,7 @@ const activeTab = ref(0);
   <AppTabSwitcher v-model="activeTab" :tabs="['бульдог', 'мопс']" />
 
   <AppBreedCard
-    title="Французький бульдог"
+    title="Шит-цу"
     :image="shitsuImg"
     class="m-10"
     v-if="activeTab === 0"
@@ -69,6 +100,8 @@ const activeTab = ref(0);
   <AppHomeTag class="component" />
 
   <AppQuizStepDivider :current="1" :total="7" class="component" />
+
+  <component :is="PawIcon"></component>
 </template>
 
 <style>
