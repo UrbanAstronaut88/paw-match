@@ -1,8 +1,5 @@
 @utility input-label {
-  font-family: var(--font-primary);
-  font-size: var(--text-h3);
-  font-weight: var(--text-h3--font-weight);
-  color: var(--color-gray-100);
+  @apply text-h3 font-primary text-gray-100;
 }
 
 @utility input-wrapper {

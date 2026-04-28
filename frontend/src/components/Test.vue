@@ -11,6 +11,7 @@ import QuizHero from "./QuizHero.vue";
 import mopsImg from "../assets/mops_card.png";
 import shitsuImg from "../assets/shi-tsu_card.png";
 import AppTabSwitcher from "./assets/AppTabSwitcher.vue";
+import PawIcon from "../assets/icons/big-paw.svg";
 
 import { ref } from "vue";
 import AppHomeTag from "./assets/AppHomeTag.vue";
@@ -52,7 +53,7 @@ const activeTab = ref(0);
   <AppTabSwitcher v-model="activeTab" :tabs="['бульдог', 'мопс']" />
 
   <AppBreedCard
-    title="Французький бульдог"
+    title="Шит-цу"
     :image="shitsuImg"
     class="m-10"
     v-if="activeTab === 0"
@@ -69,6 +70,8 @@ const activeTab = ref(0);
   <AppHomeTag class="component" />
 
   <AppQuizStepDivider :current="1" :total="7" class="component" />
+
+  <component :is="PawIcon"></component>
 </template>
 
 <style>

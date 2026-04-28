@@ -73,25 +73,25 @@ class BreedCompareCardSerializer(serializers.ModelSerializer):
     def get_traits(self, obj: Breed) -> dict[str, dict[str, Any]]:
         return {
             "size": {
-                "label": "Розмір",
+                "label": "size",
                 "value": obj.size,
                 "max": 3,
                 "display": obj.get_size_display(),
             },
             "energy": {
-                "label": "Рівень активності",
+                "label": "energy",
                 "value": obj.energy,
                 "max": 5,
                 "display": obj.get_energy_display(),
             },
             "grooming": {
-                "label": "Складність догляду",
+                "label": "grooming",
                 "value": obj.grooming,
                 "max": 5,
                 "display": obj.get_grooming_display(),
             },
             "kids_friendly": {
-                "label": "Підходить для сімей з дітьми",
+                "label": "kids_friendly",
                 "value": obj.kids_friendly,
                 "max": 5,
                 "display": obj.get_kids_friendly_display(),
@@ -100,12 +100,12 @@ class BreedCompareCardSerializer(serializers.ModelSerializer):
 
     def get_housing(self, obj: Breed) -> list[str]:
         if obj.housing_type == Breed.HousingType.APARTMENT:
-            return ["Квартира"]
+            return ["apartment"]
 
         if obj.housing_type == Breed.HousingType.HOUSE:
-            return ["Дім"]
+            return ["house"]
 
-        return ["Квартира", "Дім"]
+        return ["apartment", "house"]
 
 
 class BreedComparisonSerializer(serializers.Serializer):

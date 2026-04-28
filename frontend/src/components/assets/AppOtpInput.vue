@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 defineOptions({ inheritAttrs: false });
 
@@ -16,6 +16,10 @@ defineProps({
     type: String,
     default: "",
   },
+});
+
+onMounted(() => {
+  inputs.value[0]?.focus();
 });
 
 const emit = defineEmits(["update:modelValue"]);

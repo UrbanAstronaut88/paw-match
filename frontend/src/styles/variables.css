@@ -64,3 +64,15 @@
 
   --shadow-card: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+@keyframes paw-float {
+  0% {
+    transform: rotate(var(--rotate)) translateY(0px);
+  }
+  50% {
+    transform: rotate(var(--rotate)) translateY(-16px);
+  }
+  100% {
+    transform: rotate(var(--rotate)) translateY(0px);
+  }
+}
