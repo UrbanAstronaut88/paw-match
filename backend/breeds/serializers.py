@@ -100,12 +100,12 @@ class BreedCompareCardSerializer(serializers.ModelSerializer):
 
     def get_housing(self, obj: Breed) -> list[str]:
         if obj.housing_type == Breed.HousingType.APARTMENT:
-            return ["Квартира"]
+            return ["apartment"]
 
         if obj.housing_type == Breed.HousingType.HOUSE:
-            return ["Дім"]
+            return ["house"]
 
-        return ["Квартира", "Дім"]
+        return ["apartment", "house"]
 
 
 class BreedComparisonSerializer(serializers.Serializer):

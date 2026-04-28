@@ -116,8 +116,8 @@ class BreedCompareView(APIView):
             comparison.conclusion
             if comparison
             else (
-                f"{first_breed.name} і {second_breed.name} — це різні породи "
-                "з унікальними характеристиками."
+                f"{first_breed.name} і {second_breed.name} — These are different breeds, "
+                "each with their own unique characteristics."
             )
         )
 
