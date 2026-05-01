@@ -196,16 +196,8 @@ class QuizResultViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = QuizResultSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = QuizResult.objects.none()
-
-    def get_queryset(self) -> QuerySet[QuizResult]:
-        if getattr(self, "swagger_fake_view", False):
-            return QuizResult.objects.none()
-
-        return QuizResult.objects.filter(
-            user=self.request.user
-        ).order_by("-created_at")
+    queryset = QuizResult.objects.all().order_by("-created_at")
 
     def perform_create(self, serializer: QuizResultSerializer) -> None:
-        serializer.save(user=self.request.user)
+        user = self.request.user if self.request.user.is_authenticated else None
+        serializer.save(user=user)
