@@ -3,8 +3,13 @@ import PawIcon from "../assets/logo.svg";
 import HomeIcon from "../assets/icons/ph_house-simple-bold.svg";
 import MagnifyingGlassIcon from "../assets/icons/ph_magnifying-glass-bold.svg";
 import HeartIcon from "../assets/icons/ph_heart-bold-1.svg";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
+import { useAuthStore } from "../stores/auth";
+
+const authStore = useAuthStore();
+const route = useRoute();
+const router = useRouter();
 
 defineProps({
   user: {
@@ -31,13 +36,22 @@ const navItems = [
   },
 ];
 
-const route = useRoute();
 const currentPath = computed(() => route.path);
+
+function handleAvatarClick() {
+  if (authStore.isAuthenticated) {
+    router.push("/profile");
+  } else {
+    router.push("/auth");
+  }
+}
 </script>
 
 <template>
-  <header class="app-header rounded-2xl min-h-20">
-    <div class="flex items-center justify-between h-full">
+  <header class="app-header rounded-2xl min-h-20 sticky top-0 z-50">
+    <div
+      class="flex items-center justify-between h-full max-w-[1296px] mx-auto"
+    >
       <a href="/" class="flex items-center gap-2 no-underline">
         <span class="font-primary text-h1 text-gray-100">Petly</span>
         <PawIcon class="text-primary" />
@@ -60,12 +74,14 @@ const currentPath = computed(() => route.path);
           </a>
         </nav>
 
-        <div class="overflow-hidden shrink-0 w-13 h-13 rounded-full bg-gray-20">
+        <div
+          class="overflow-hidden shrink-0 w-13 h-13 rounded-full bg-gray-20 cursor-pointer"
+          @click="handleAvatarClick"
+        >
           <img
-            v-if="user?.avatar"
-            :src="user.avatar"
-            :alt="user.name"
-            class="w-full h-full object-cover"
+            v-if="authStore.user?.profile?.avatar"
+            :src="authStore.user.profile.avatar"
+            :alt="authStore.user.profile.name"
           />
           <span v-else class="block w-full h-full bg-gray-20" />
         </div>

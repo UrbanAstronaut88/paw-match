@@ -7,11 +7,12 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border-color: var(--color-primary);
+  border-color: var(--color-gray-60);
   background-color: var(--color-white);
 
   &::after {
     content: "";
+    display: block;
     @apply rounded-full scale-0 transition-transform;
     width: 10px;
     height: 10px;
