@@ -53,6 +53,7 @@ class MatchView(APIView):
 
         result: list[dict] = [
             {
+                "id": match["breed"].id,
                 "breed": match["breed"].name,
                 "score": match["score"],
                 "match": match["match"],
