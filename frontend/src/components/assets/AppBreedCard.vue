@@ -3,6 +3,8 @@ import HeartIcon from "../../assets/icons/ph_heart-bold-1.svg";
 import HeartFillIcon from "../../assets/icons/ph_heart-fill-1.svg";
 import { ref } from "vue";
 
+const emit = defineEmits(["view", "toggle-like"]);
+
 const props = defineProps({
   title: { type: String, required: true },
   image: { type: String, required: true },
@@ -24,8 +26,8 @@ function toggleLike() {
   >
     <div :class="size === 'big' ? 'p-6' : 'p-4'">
       <div
-        class="w-full overflow-hidden shrink-0"
-        :class="size === 'big' ? 'h-125' : 'h-67'"
+        class="overflow-hidden shrink-0"
+        :class="size === 'big' ? 'h-125 w-146' : 'h-67 w-67'"
       >
         <img :src="image" :alt="title" class="w-full h-full object-cover" />
       </div>
@@ -49,6 +51,7 @@ function toggleLike() {
               :is="isLiked ? HeartFillIcon : HeartIcon"
               class="size-6 block"
               :class="isLiked ? 'text-primary' : 'text-gray-100'"
+              @click.stop="emit('toggle-like')"
             />
           </button>
         </div>
@@ -56,6 +59,7 @@ function toggleLike() {
         <button
           class="btn btn-primary self-start"
           :class="size === 'big' ? 'btn-md' : 'btn-sm'"
+          @click.stop="emit('view')"
         >
           Переглянути
         </button>

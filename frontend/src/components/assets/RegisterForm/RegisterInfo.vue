@@ -2,6 +2,10 @@
 import { ref, computed } from "vue";
 import AppInput from "../AppInput.vue";
 
+defineProps({
+  isLoading: { type: Boolean, default: false },
+});
+
 const emit = defineEmits(["next"]);
 
 const name = ref("");
@@ -139,10 +143,9 @@ function handleEnter() {
 
     <button
       class="btn btn-primary btn-md"
-      :disabled="!isFormValid"
-      @click="handleEnter"
+      :disabled="!isFormValid || isLoading"
     >
-      Продовжити
+      {{ isLoading ? "Завантаження..." : "Продовжити" }}
     </button>
   </div>
 </template>
