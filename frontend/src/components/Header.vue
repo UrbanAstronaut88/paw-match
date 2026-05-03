@@ -4,7 +4,7 @@ import HomeIcon from "../assets/icons/ph_house-simple-bold.svg";
 import MagnifyingGlassIcon from "../assets/icons/ph_magnifying-glass-bold.svg";
 import HeartIcon from "../assets/icons/ph_heart-bold-1.svg";
 import { useRoute, useRouter } from "vue-router";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useAuthStore } from "../stores/auth";
 
 const authStore = useAuthStore();
@@ -35,6 +35,12 @@ const navItems = [
     icon: HeartIcon,
   },
 ];
+
+onMounted(async () => {
+  if (authStore.isAuthenticated) {
+    await authStore.fetchMe();
+  }
+});
 
 const currentPath = computed(() => route.path);
 
@@ -75,13 +81,17 @@ function handleAvatarClick() {
         </nav>
 
         <div
-          class="overflow-hidden shrink-0 w-13 h-13 rounded-full bg-gray-20 cursor-pointer"
+          class="overflow-hidden shrink-0 w-13 h-13 rounded-full bg-gray-20 cursor-pointer border-2 transition-all"
+          :class="
+            currentPath === '/profile' ? 'border-primary' : 'border-transparent'
+          "
           @click="handleAvatarClick"
         >
           <img
             v-if="authStore.user?.profile?.avatar"
             :src="authStore.user.profile.avatar"
             :alt="authStore.user.profile.name"
+            class="w-full h-full object-cover"
           />
           <span v-else class="block w-full h-full bg-gray-20" />
         </div>
