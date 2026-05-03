@@ -15,8 +15,8 @@ export async function matchBreeds(payload) {
   return data;
 }
 
-export async function compareBreeds(params) {
-  const { data } = await http.get("/breeds/compare/", { params });
+export async function compareBreeds(firstId, secondId) {
+  const { data } = await http.get(`/breeds/compare/?first=${firstId}&second=${secondId}`);
   return data;
 }
 

@@ -112,13 +112,30 @@ async function toggleFavorite() {
 
         <AppHomeTag :type="breed.traits.housing_type.value" class="mt-2" />
 
-        <button
-          class="btn btn-big mt-2.5 max-w-[300px]"
-          :class="isFavorite ? 'btn-secondary' : 'btn-primary'"
-          @click="toggleFavorite"
-        >
-          {{ isFavorite ? "Видалити з улюбленого" : "Додати в улюблене" }}
-        </button>
+        <div class="flex items-center gap-4 mt-2.5">
+          <template v-if="isFavorite">
+            <button
+              class="btn btn-md btn-secondary"
+              @click="toggleFavorite"
+            >
+              Видалити породу
+            </button>
+            <button
+              class="btn btn-md btn-primary"
+              @click="router.push('/explore')"
+            >
+              Більше порід
+            </button>
+          </template>
+
+          <button
+            v-else
+            class="btn btn-big btn-primary"
+            @click="toggleFavorite"
+          >
+            Додати в улюблене
+          </button>
+        </div>
       </div>
     </template>
 

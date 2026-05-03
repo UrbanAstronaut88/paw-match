@@ -29,6 +29,21 @@ const router = createRouter({
       path: "/breed/:id",
       component: () => import("../components/BreedPage.vue"),
     },
+    {
+      path: "/favorites",
+      component: () => import("../components/Favorites.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/compare",
+      component: () => import("../components/ComparePage.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/profile",
+      component: () => import("../components/ProfilePage.vue"),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 
