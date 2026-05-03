@@ -1,4 +1,5 @@
 import { http } from "./http";
+import Cookies from "js-cookie";
 
 http.interceptors.response.use(
   (response) => response,

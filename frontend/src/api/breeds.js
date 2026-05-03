@@ -26,7 +26,7 @@ export async function addFavorite(breedId) {
 }
 
 export async function removeFavorite(breedId) {
-  const { data } = await http.post(`/breeds/${breedId}/unfavorite/`);
+  const { data } = await http.delete(`/breeds/${breedId}/unfavorite/`);
   return data;
 }
 
