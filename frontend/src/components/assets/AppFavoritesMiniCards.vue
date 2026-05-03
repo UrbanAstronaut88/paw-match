@@ -48,7 +48,7 @@ async function removeLike(breedId, index) {
 </script>
 
 <template>
-  <div class="grid grid-cols-3 gap-6 min-h-[160px]">
+  <div class="grid grid-cols-3 gap-6 h-[169px]">
     <template v-if="favorites.length">
       <div
         v-for="(favorite, index) in favorites"
@@ -58,7 +58,7 @@ async function removeLike(breedId, index) {
         <img
           :src="favorite.img"
           :alt="favorite.title"
-          class="rounded-xl w-full object-cover"
+          class="rounded-xl w-full h-[131px] object-cover"
         />
         <div class="flex flex-row justify-between items-center px-1">
           <h3 class="text-gray-100 text-h3 font-primary m-0">

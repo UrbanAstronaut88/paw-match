@@ -1,7 +1,7 @@
 <script setup>
 import HeartIcon from "../../assets/icons/ph_heart-bold-1.svg";
 import HeartFillIcon from "../../assets/icons/ph_heart-fill-1.svg";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const emit = defineEmits(["view", "toggle-like"]);
 
@@ -13,6 +13,13 @@ const props = defineProps({
 });
 
 const isLiked = ref(props.liked);
+
+watch(
+  () => props.liked,
+  (val) => {
+    isLiked.value = val;
+  },
+);
 
 function toggleLike() {
   isLiked.value = !isLiked.value;
@@ -45,13 +52,12 @@ function toggleLike() {
           </span>
           <button
             class="cursor-pointer outline-none bg-transparent border-none p-0 flex items-center justify-center"
-            @click="toggleLike"
+            @click.stop="emit('toggle-like')"
           >
             <component
               :is="isLiked ? HeartFillIcon : HeartIcon"
               class="size-6 block"
               :class="isLiked ? 'text-primary' : 'text-gray-100'"
-              @click.stop="emit('toggle-like')"
             />
           </button>
         </div>
