@@ -17,39 +17,11 @@ const selectedIds = ref([]);
 
 const canCompare = computed(() => selectedIds.value.length === 2);
 
-// Тестові дані
-const mockFavorites = [
-  // {
-  //   id: 1,
-  //   name: "Ши-тцу",
-  //   image:
-  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Shih-Tzu.jpg/800px-Shih-Tzu.jpg",
-  // },
-  // {
-  //   id: 2,
-  //   name: "Мопс",
-  //   image:
-  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Mops_oct09_cropped2.jpg/800px-Mops_oct09_cropped2.jpg",
-  // },
-  // {
-  //   id: 3,
-  //   name: "Чихуахуа",
-  //   image:
-  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Chihuahua1_bvdb.jpg/800px-Chihuahua1_bvdb.jpg",
-  // },
-  // {
-  //   id: 4,
-  //   name: "Сибірський хаскі",
-  //   image:
-  //     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Black-Magic-Big-Boy.jpg/800px-Black-Magic-Big-Boy.jpg",
-  // },
-];
-
 onMounted(async () => {
-  // if (!authStore.isAuthenticated) {
-  //   router.push("/auth");
-  //   return;
-  // }
+  if (!authStore.isAuthenticated) {
+    router.push("/auth");
+    return;
+  }
 
   isLoading.value = true;
   try {
@@ -96,19 +68,34 @@ function toggleSelect(breedId) {
   }
 }
 
+// async function handleCompare() {
+//   if (!canCompare.value) return;
+//   try {
+//     const result = await compareBreeds(
+//       selectedIds.value[0],
+//       selectedIds.value[1],
+//     );
+//     router.push({
+//       path: "/compare",
+//       state: { result, breeds: selectedIds.value },
+//     });
+//   } catch (error) {
+//     console.error("Помилка порівняння:", error);
+//   }
+// }
+
 async function handleCompare() {
   if (!canCompare.value) return;
   try {
-    const result = await compareBreeds(
-      selectedIds.value[0],
-      selectedIds.value[1],
-    );
     router.push({
       path: "/compare",
-      state: { result, breeds: selectedIds.value },
+      query: {
+        first: selectedIds.value[0],
+        second: selectedIds.value[1],
+      },
     });
   } catch (error) {
-    console.error("Помилка порівняння:", error);
+    console.error("Помилка:", error);
   }
 }
 
