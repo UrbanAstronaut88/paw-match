@@ -4,17 +4,22 @@ import { useRoute, useRouter } from "vue-router";
 import AppPageLayout from "./assets/AppPageLayout.vue";
 import AppBreedStats from "./assets/AppBreedStats.vue";
 import AppHomeTag from "./assets/AppHomeTag.vue";
-import { getBreed } from "../api/breeds";
-import { useAuthStore } from "../stores/auth";
 import AppModal from "./assets/AppModal.vue";
+import {
+  getBreed,
+  addFavorite,
+  removeFavorite,
+  listFavorites,
+} from "../api/breeds";
+import { useAuthStore } from "../stores/auth";
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 
 const breed = ref(null);
 const isLoading = ref(false);
-
-const authStore = useAuthStore();
+const isFavorite = ref(false);
 const showAuthModal = ref(false);
 
 const stats = computed(() => {
@@ -32,6 +37,13 @@ onMounted(async () => {
   isLoading.value = true;
   try {
     breed.value = await getBreed(route.params.id);
+
+    if (authStore.isAuthenticated) {
+      const favorites = await listFavorites();
+      isFavorite.value = favorites.results.some(
+        (f) => f.breed.id === breed.value.id,
+      );
+    }
   } catch (error) {
     console.error("Помилка завантаження породи:", error);
   } finally {
@@ -43,12 +55,23 @@ function goBack() {
   router.back();
 }
 
-function addToFavorites() {
+async function toggleFavorite() {
   if (!authStore.isAuthenticated) {
     showAuthModal.value = true;
     return;
   }
-  // TODO: підключити до бекенду
+
+  try {
+    if (isFavorite.value) {
+      await removeFavorite(breed.value.id);
+      isFavorite.value = false;
+    } else {
+      await addFavorite(breed.value.id);
+      isFavorite.value = true;
+    }
+  } catch (error) {
+    console.error("Помилка:", error);
+  }
 }
 </script>
 
@@ -90,10 +113,11 @@ function addToFavorites() {
         <AppHomeTag :type="breed.traits.housing_type.value" class="mt-2" />
 
         <button
-          class="btn btn-primary btn-big mt-2.5 max-w-[300px]"
-          @click="addToFavorites"
+          class="btn btn-big mt-2.5 max-w-[300px]"
+          :class="isFavorite ? 'btn-secondary' : 'btn-primary'"
+          @click="toggleFavorite"
         >
-          Додати в улюблене
+          {{ isFavorite ? "Видалити з улюбленого" : "Додати в улюблене" }}
         </button>
       </div>
     </template>

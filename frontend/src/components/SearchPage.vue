@@ -6,7 +6,12 @@ import AppInput from "./assets/AppInput.vue";
 import AppBreedCard from "./assets/AppBreedCard.vue";
 import AppPageLayout from "./assets/AppPageLayout.vue";
 import AppFilters from "./assets/AppFilters.vue";
-import { listBreeds } from "../api/breeds";
+import {
+  addFavorite,
+  listBreeds,
+  listFavorites,
+  removeFavorite,
+} from "../api/breeds";
 import { useAuthStore } from "../stores/auth";
 import AppModal from "./assets/AppModal.vue";
 
@@ -18,6 +23,8 @@ const isLoading = ref(false);
 
 const authStore = useAuthStore();
 const showAuthModal = ref(false);
+
+const favoriteIds = ref(new Set());
 
 function parseArrayQuery(val) {
   if (!val) return [];
@@ -89,8 +96,13 @@ async function fetchBreeds() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   fetchBreeds();
+
+  if (authStore.isAuthenticated) {
+    const favorites = await listFavorites();
+    favoriteIds.value = new Set(favorites.results.map((f) => f.breed.id));
+  }
 });
 
 watch(
@@ -116,12 +128,24 @@ function closeFilters() {
   isFiltersOpen.value = false;
 }
 
-function handleToggleLike() {
+async function handleToggleLike(breedId) {
   if (!authStore.isAuthenticated) {
     showAuthModal.value = true;
     return;
   }
-  // TODO: підключити до бекенду
+
+  try {
+    if (favoriteIds.value.has(breedId)) {
+      await removeFavorite(breedId);
+      favoriteIds.value.delete(breedId);
+    } else {
+      await addFavorite(breedId);
+      favoriteIds.value.add(breedId);
+    }
+    favoriteIds.value = new Set(favoriteIds.value);
+  } catch (error) {
+    console.error("Помилка:", error);
+  }
 }
 
 function handleApplyFilters(newFilters) {
@@ -210,8 +234,8 @@ function goBack() {
           :key="breed.id"
           :title="breed.name"
           :image="breed.image || breed.image_url"
-          :liked="breed.liked"
-          @toggle-like="handleToggleLike"
+          :liked="favoriteIds.has(breed.id)"
+          @toggle-like="handleToggleLike(breed.id)"
           @view="router.push(`/breed/${breed.id}`)"
         />
       </div>

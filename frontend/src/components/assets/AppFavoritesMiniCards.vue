@@ -1,70 +1,83 @@
 <script setup>
 import HeartIcon from "../../assets/icons/ph_heart-fill.svg";
-import EmptyHeartIcon from "../../assets/icons/ph_heart-bold.svg";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { listFavorites, removeFavorite } from "../../api/breeds";
+import { useAuthStore } from "../../stores/auth";
+import chihuahua from "../../assets/dogs/Chihua-hua.png";
+import mops from "../../assets/dogs/Mops.png";
+import shitsu from "../../assets/dogs/Shi-tsu.png";
 
-const props = defineProps({
-  favorites: {
-    type: Array,
-    default: () => [
-      {
-        title: "Чихуахуа",
-        img: "../../assets/dogs/Chihua-hua.png",
-      },
-      {
-        title: "Мопс",
-        img: "../../assets/dogs/Mops.png",
-      },
-      {
-        title: "Ши-тцу",
-        img: "../../assets/dogs/Shi-tsu.png",
-      },
-    ],
-  },
+const authStore = useAuthStore();
+const favorites = ref([]);
+
+const defaultFavorites = [
+  { id: null, title: "Чихуахуа", img: chihuahua },
+  { id: null, title: "Мопс", img: mops },
+  { id: null, title: "Ші-тцу", img: shitsu },
+];
+
+onMounted(async () => {
+  if (!authStore.isAuthenticated) {
+    favorites.value = defaultFavorites;
+    return;
+  }
+
+  try {
+    const response = await listFavorites();
+    const results = response.results.slice(0, 3).map((f) => ({
+      id: f.breed.id,
+      title: f.breed.name,
+      img: f.breed.image || f.breed.image_url,
+    }));
+    favorites.value = results;
+  } catch (error) {
+    console.error("Помилка завантаження улюблених:", error);
+    favorites.value = defaultFavorites;
+  }
 });
 
-const likedIndexes = ref(new Set(props.favorites.map((_, i) => i)));
-
-function toggleLike(index) {
-  if (likedIndexes.value.has(index)) {
-    likedIndexes.value.delete(index);
-  } else {
-    likedIndexes.value.add(index);
+async function removeLike(breedId, index) {
+  if (!breedId) return;
+  try {
+    await removeFavorite(breedId);
+    favorites.value.splice(index, 1);
+  } catch (error) {
+    console.error("Помилка видалення:", error);
   }
-  likedIndexes.value = new Set(likedIndexes.value);
 }
-
-const getImageUrl = (url) => {
-  return new URL(`${url}`, import.meta.url).href;
-};
 </script>
 
 <template>
-  <div class="grid grid-cols-3 gap-6">
-    <div
-      v-for="(favorite, index) in favorites"
-      :key="index"
-      class="flex flex-col gap-4"
-    >
-      <div class="flex flex-col gap-4">
+  <div class="grid grid-cols-3 gap-6 min-h-[160px]">
+    <template v-if="favorites.length">
+      <div
+        v-for="(favorite, index) in favorites"
+        :key="index"
+        class="flex flex-col gap-4"
+      >
         <img
-          :src="getImageUrl(favorite.img)"
+          :src="favorite.img"
           :alt="favorite.title"
           class="rounded-xl w-full object-cover"
         />
-
         <div class="flex flex-row justify-between items-center px-1">
           <h3 class="text-gray-100 text-h3 font-primary m-0">
             {{ favorite.title }}
           </h3>
-
           <component
-            :is="likedIndexes.has(index) ? HeartIcon : EmptyHeartIcon"
-            class="text-primary cursor-pointer"
-            @click="toggleLike(index)"
+            :is="HeartIcon"
+            class="cursor-pointer"
+            :class="favorite.id ? 'text-primary' : 'text-gray-30'"
+            @click="removeLike(favorite.id, index)"
           />
         </div>
       </div>
+    </template>
+
+    <div v-else class="col-span-3 flex items-center justify-center">
+      <span class="font-primary text-secondary text-gray-60">
+        Улюблених порід поки немає
+      </span>
     </div>
   </div>
 </template>
