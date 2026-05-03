@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import RegisterEmail from "./RegisterForm/RegisterEmail.vue";
-import RegisterOtp from "./RegisterForm/RegisterOtp.vue";
 import RegisterPassword from "./RegisterForm/RegisterPassword.vue";
 import RegisterInfo from "./RegisterForm/RegisterInfo.vue";
 
@@ -16,10 +15,10 @@ const serverError = ref("");
 
 const formData = ref({
   email: "",
-  otp: "",
   password: "",
   name: "",
-  lastName: "",
+  surname: "",
+  city: "",
   birthday: "",
 });
 
@@ -28,14 +27,15 @@ function onEmailNext(email) {
   step.value = 2;
 }
 
-function onOtpNext(otp) {
-  formData.value.otp = otp;
+function onPasswordNext(password) {
+  formData.value.password = password;
   step.value = 3;
 }
 
-function onPasswordNext(password) {
-  formData.value.password = password;
-  step.value = 4;
+function formatBirthday(value) {
+  if (!value) return "";
+  const [day, month, year] = value.split(".");
+  return `${year}-${month}-${day}`;
 }
 
 async function onInfoNext(info) {
@@ -48,10 +48,11 @@ async function onInfoNext(info) {
     await authStore.handleRegister({
       email: formData.value.email,
       password: formData.value.password,
-      first_name: formData.value.name,
-      last_name: formData.value.lastName,
-      birthday: formData.value.birthday,
-      otp: formData.value.otp,
+      password2: formData.value.password,
+      name: formData.value.name,
+      surname: formData.value.surname,
+      city: formData.value.city,
+      birthday: formatBirthday(formData.value.birthday),
     });
     router.push("/");
   } catch (error) {
@@ -65,10 +66,9 @@ async function onInfoNext(info) {
 
 <template>
   <RegisterEmail v-if="step === 1" @next="onEmailNext" />
-  <RegisterOtp v-else-if="step === 2" @next="onOtpNext" />
-  <RegisterPassword v-else-if="step === 3" @next="onPasswordNext" />
+  <RegisterPassword v-else-if="step === 2" @next="onPasswordNext" />
   <RegisterInfo
-    v-else-if="step === 4"
+    v-else-if="step === 3"
     :is-loading="isLoading"
     @next="onInfoNext"
   />

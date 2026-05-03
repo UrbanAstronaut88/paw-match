@@ -9,11 +9,12 @@ defineProps({
 const emit = defineEmits(["next"]);
 
 const name = ref("");
-const lastName = ref("");
+const surname = ref("");
 const birthday = ref("");
+const city = ref("");
 
 const nameTouched = ref(false);
-const lastNameTouched = ref(false);
+const surnameTouched = ref(false);
 const birthdayTouched = ref(false);
 
 const isBirthdayValid = computed(() => {
@@ -51,12 +52,8 @@ const handleBirthdayInput = (value) => {
   }
 
   let formatted = day;
-  if (cleaned.length > 2) {
-    formatted += "." + month;
-  }
-  if (cleaned.length > 4) {
-    formatted += "." + year;
-  }
+  if (cleaned.length > 2) formatted += "." + month;
+  if (cleaned.length > 4) formatted += "." + year;
 
   birthday.value = formatted;
 
@@ -66,36 +63,39 @@ const handleBirthdayInput = (value) => {
 };
 
 const isFormValid = computed(
-  () => name.value && lastName.value && isBirthdayValid.value,
+  () => name.value && surname.value && isBirthdayValid.value,
 );
 
 const nameRef = ref(null);
-const lastNameRef = ref(null);
+const surnameRef = ref(null);
 const birthdayRef = ref(null);
+const cityRef = ref(null);
+
+function handleSubmit() {
+  if (!isFormValid.value) return;
+
+  emit("next", {
+    name: name.value,
+    surname: surname.value,
+    birthday: birthday.value,
+    city: city.value,
+  });
+}
 
 function handleEnter() {
   if (!name.value) {
     nameRef.value?.inputRef?.focus();
     return;
   }
-
-  if (!lastName.value) {
-    lastNameRef.value?.inputRef?.focus();
+  if (!surname.value) {
+    surnameRef.value?.inputRef?.focus();
     return;
   }
-
   if (!isBirthdayValid.value) {
     birthdayRef.value?.inputRef?.focus();
     return;
   }
-
-  alert("✅ Усі перевірки пройдені успішно!\nДані відправляються далі.");
-
-  emit("next", {
-    name: name.value,
-    lastName: lastName.value,
-    birthday: birthday.value,
-  });
+  handleSubmit();
 }
 </script>
 
@@ -116,14 +116,14 @@ function handleEnter() {
     />
 
     <AppInput
-      ref="lastNameRef"
+      ref="surnameRef"
       placeholder="Прізвище"
-      v-model="lastName"
+      v-model="surname"
       :error="
-        lastNameTouched && !lastName ? 'Будь ласка, введіть ваше прізвище' : ''
+        surnameTouched && !surname ? 'Будь ласка, введіть ваше прізвище' : ''
       "
-      @blur="lastNameTouched = true"
-      @update:model-value="lastNameTouched = false"
+      @blur="surnameTouched = true"
+      @update:model-value="surnameTouched = false"
     />
 
     <AppInput
@@ -141,9 +141,16 @@ function handleEnter() {
       @update:model-value="handleBirthdayInput"
     />
 
+    <AppInput
+      ref="cityRef"
+      placeholder="Місто (необов'язково)"
+      v-model="city"
+    />
+
     <button
       class="btn btn-primary btn-md"
       :disabled="!isFormValid || isLoading"
+      @click="handleSubmit"
     >
       {{ isLoading ? "Завантаження..." : "Продовжити" }}
     </button>
