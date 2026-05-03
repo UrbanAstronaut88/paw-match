@@ -13,12 +13,5 @@ const housing = ref(null);
 </script>
 
 <template>
-  <!-- <AuthContainer /> -->
-
-  <AppLayout>
-    <!-- <HomePage /> -->
-    <!-- <AppQuiz /> -->
-    <RouterView />
-    <!-- <PetsWorld /> -->
-  </AppLayout>
+  <RouterView />
 </template>
