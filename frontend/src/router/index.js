@@ -1,48 +1,52 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "../stores/auth";
+import AppLayout from "../components/AppLayout.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: () => import("../components/HomePage.vue") },
     {
       path: "/auth",
       component: () => import("../components/AuthContainer.vue"),
     },
     {
-      path: "/explore",
-      component: () => import("../components/SearchPage.vue"),
-    },
-    {
-      path: "/pets-world",
-      component: () => import("../components/PetsWorld.vue"),
-    },
-    {
-      path: "/article/:slug",
-      component: () => import("../components/assets/AppArticlePage.vue"),
-    },
-    {
-      path: "/quiz",
-      component: () => import("../components/assets/AppQuiz.vue"),
-    },
-    {
-      path: "/breed/:id",
-      component: () => import("../components/BreedPage.vue"),
-    },
-    {
-      path: "/favorites",
-      component: () => import("../components/Favorites.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/compare",
-      component: () => import("../components/ComparePage.vue"),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/profile",
-      component: () => import("../components/ProfilePage.vue"),
-      meta: { requiresAuth: true },
+      path: "/",
+      component: AppLayout,
+      children: [
+        { path: "", component: () => import("../components/HomePage.vue") },
+        {
+          path: "explore",
+          component: () => import("../components/SearchPage.vue"),
+        },
+        {
+          path: "pets-world",
+          component: () => import("../components/PetsWorld.vue"),
+        },
+        {
+          path: "article/:slug",
+          component: () => import("../components/assets/AppArticlePage.vue"),
+        },
+        {
+          path: "quiz",
+          component: () => import("../components/assets/AppQuiz.vue"),
+        },
+        {
+          path: "breed/:id",
+          component: () => import("../components/BreedPage.vue"),
+        },
+        {
+          path: "favorites",
+          component: () => import("../components/Favorites.vue"),
+        },
+        {
+          path: "compare",
+          component: () => import("../components/ComparePage.vue"),
+        },
+        {
+          path: "profile",
+          component: () => import("../components/ProfilePage.vue"),
+        },
+      ],
     },
   ],
 });
