@@ -5,7 +5,10 @@ import { login, register, logout, me } from "../api/auth";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(Cookies.get("token") || null);
-  const user = ref(JSON.parse(Cookies.get("user") || "null"));
+  const rawUser = Cookies.get("user");
+  const user = ref(
+    rawUser && rawUser !== "undefined" ? JSON.parse(rawUser) : null,
+  );
 
   const isAuthenticated = computed(() => !!token.value);
 
