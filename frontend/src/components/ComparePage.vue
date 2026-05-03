@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import AppPageLayout from "./assets/AppPageLayout.vue";
 import AppBreedCard from "./assets/AppBreedCard.vue";
 import AppBreedStats from "./assets/AppBreedStats.vue";
@@ -9,6 +9,7 @@ import { compareBreeds } from "../api/breeds";
 import AppSplitContent from "./assets/AppSplitContent.vue";
 
 const router = useRouter();
+const route = useRoute();
 
 const isLoading = ref(false);
 const firstBreed = ref(null);
@@ -31,16 +32,38 @@ const secondStats = computed(() =>
   secondBreed.value ? getStats(secondBreed.value.traits) : [],
 );
 
+// onMounted(async () => {
+//   const state = history.state;
+//   if (!state?.breeds || state.breeds.length < 2) {
+//     router.back();
+//     return;
+//   }
+
+//   isLoading.value = true;
+//   try {
+//     const result = await compareBreeds(state.breeds[0], state.breeds[1]);
+//     firstBreed.value = result.first_breed;
+//     secondBreed.value = result.second_breed;
+//     conclusion.value = result.conclusion;
+//   } catch (error) {
+//     console.error("Помилка порівняння:", error);
+//   } finally {
+//     isLoading.value = false;
+//   }
+// });
+
 onMounted(async () => {
-  const state = history.state;
-  if (!state?.breeds || state.breeds.length < 2) {
+  const firstId = route.query.first;
+  const secondId = route.query.second;
+
+  if (!firstId || !secondId) {
     router.back();
     return;
   }
 
   isLoading.value = true;
   try {
-    const result = await compareBreeds(state.breeds[0], state.breeds[1]);
+    const result = await compareBreeds(firstId, secondId);
     firstBreed.value = result.first_breed;
     secondBreed.value = result.second_breed;
     conclusion.value = result.conclusion;
