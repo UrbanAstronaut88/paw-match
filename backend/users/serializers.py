@@ -3,6 +3,7 @@ from typing import Any
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.utils import timezone
 from rest_framework import serializers
 
 from .models import UserProfile
@@ -20,19 +21,18 @@ class RegisterSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False, allow_blank=True, max_length=100)
     surname = serializers.CharField(required=False, allow_blank=True, max_length=100)
     city = serializers.CharField(required=False, allow_blank=True, max_length=100)
-    age = serializers.IntegerField(required=False, min_value=1, max_value=120)
+    birthday = serializers.DateField(required=False, allow_null=True)
 
     class Meta:
         model = User
         fields = (
-            "username",
             "email",
             "password",
             "password2",
             "name",
             "surname",
             "city",
-            "age",
+            "birthday",
         )
 
     def validate_email(self, email: str) -> str:
@@ -45,6 +45,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return normalized_email
 
+    def validate_birthday(self, birthday: Any) -> Any:
+        if birthday and birthday > timezone.now().date():
+            raise serializers.ValidationError("Birthday cannot be in the future.")
+
+        return birthday
+
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         if data["password"] != data["password2"]:
             raise serializers.ValidationError("Passwords do not match")
@@ -56,16 +62,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         name: str = validated_data.pop("name", "").strip()
         surname: str = validated_data.pop("surname", "").strip()
         city: str = validated_data.pop("city", "").strip()
-        age: int | None = validated_data.pop("age", None)
+        birthday = validated_data.pop("birthday", None)
         validated_data.pop("password2")
 
-        user: User = User.objects.create_user(**validated_data)
+        email: str = validated_data["email"]
+
+        user: User = User.objects.create_user(
+            username=email,
+            email=email,
+            password=validated_data["password"],
+        )
 
         profile: UserProfile = user.profile
         profile.name = name
         profile.surname = surname
         profile.city = city
-        profile.age = age
+        profile.birthday = birthday
         profile.save()
 
         return user
@@ -103,19 +115,19 @@ class UserProfileReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ("name", "surname", "city", "age", "avatar")
+        fields = ("name", "surname", "city", "birthday", "avatar")
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False, allow_blank=True, max_length=100)
     surname = serializers.CharField(required=False, allow_blank=True, max_length=100)
     city = serializers.CharField(required=False, allow_blank=True, max_length=100)
-    age = serializers.IntegerField(required=False, min_value=1, max_value=120)
+    birthday = serializers.DateField(required=False, allow_null=True)
     avatar = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = UserProfile
-        fields = ("name", "surname", "city", "age", "avatar")
+        fields = ("name", "surname", "city", "birthday", "avatar")
 
     def validate_name(self, value: str) -> str:
         return value.strip()
@@ -125,6 +137,12 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
 
     def validate_city(self, value: str) -> str:
         return value.strip()
+
+    def validate_birthday(self, birthday: Any) -> Any:
+        if birthday and birthday > timezone.now().date():
+            raise serializers.ValidationError("Birthday cannot be in the future.")
+
+        return birthday
 
     def validate_avatar(self, value: Any) -> Any:
         max_size_in_bytes: int = 5 * 1024 * 1024
@@ -147,7 +165,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "username", "email", "profile")
+        fields = ("id", "email", "profile")
 
 
 class ChangePasswordSerializer(serializers.Serializer):
