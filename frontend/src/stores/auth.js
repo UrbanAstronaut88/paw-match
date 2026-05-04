@@ -33,8 +33,17 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function handleRegister(payload) {
-    const data = await register(payload);
-    setAuth(data.access, data.user);
+    await register(payload);
+    const data = await login({
+      email: payload.email,
+      password: payload.password,
+    });
+    token.value = data.access;
+    Cookies.set("token", data.access, { expires: 7 });
+    Cookies.set("refresh", data.refresh, { expires: 30 });
+    const userData = await me();
+    user.value = userData;
+    Cookies.set("user", JSON.stringify(userData), { expires: 7 });
     return data;
   }
 
