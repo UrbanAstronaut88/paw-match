@@ -34,7 +34,7 @@ export async function me() {
 }
 
 export async function changePassword(payload) {
-  const { data } = await http.post("/auth/change-password/", payload);
+  const { data } = await http.patch("/auth/change-password/", payload);
   return data;
 }
 

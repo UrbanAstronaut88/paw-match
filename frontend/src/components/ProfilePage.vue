@@ -103,6 +103,7 @@ async function savePassword() {
     await changePassword({
       old_password: passwordForm.value.oldPassword,
       new_password: passwordForm.value.newPassword,
+      new_password2: passwordForm.value.newPassword,
     });
     passwordSuccess.value = "Пароль змінено";
     passwordForm.value = { oldPassword: "", newPassword: "" };
