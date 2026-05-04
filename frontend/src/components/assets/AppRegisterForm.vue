@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 import RegisterEmail from "./RegisterForm/RegisterEmail.vue";
@@ -38,6 +38,14 @@ function formatBirthday(value) {
   return `${year}-${month}-${day}`;
 }
 
+watch(
+  formData,
+  () => {
+    serverError.value = "";
+  },
+  { deep: true },
+);
+
 async function onInfoNext(info) {
   formData.value = { ...formData.value, ...info };
 
@@ -56,7 +64,12 @@ async function onInfoNext(info) {
     });
     router.push("/");
   } catch (error) {
-    serverError.value = "Щось пішло не так. Спробуйте ще раз.";
+    const data = error.response?.data;
+    if (data?.email) {
+      serverError.value = "Користувач з цією електронною адресою вже існує";
+    } else {
+      serverError.value = "Щось пішло не так. Спробуйте ще раз.";
+    }
     step.value = 1;
   } finally {
     isLoading.value = false;
@@ -65,7 +78,11 @@ async function onInfoNext(info) {
 </script>
 
 <template>
-  <RegisterEmail v-if="step === 1" @next="onEmailNext" />
+  <RegisterEmail
+    v-if="step === 1"
+    @next="onEmailNext"
+    @input="serverError = ''"
+  />
   <RegisterPassword v-else-if="step === 2" @next="onPasswordNext" />
   <RegisterInfo
     v-else-if="step === 3"

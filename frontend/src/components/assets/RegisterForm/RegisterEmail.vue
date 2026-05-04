@@ -2,7 +2,11 @@
 import { ref, computed } from "vue";
 import AppInput from "../AppInput.vue";
 
-const emit = defineEmits(["next"]);
+defineProps({
+  serverError: { type: String, default: "" },
+});
+
+const emit = defineEmits(["next", "input"]);
 
 const email = ref("");
 const emailTouched = ref(false);
@@ -26,7 +30,10 @@ const isEmailValid = computed(() =>
         emailTouched && !isEmailValid ? 'Перевірте правильність адреси' : ''
       "
       @blur="emailTouched = true"
-      @update:model-value="emailTouched = false"
+      @update:model-value="
+        emailTouched = false;
+        emit('input');
+      "
       autofocus
       ref="emailRef"
     />
