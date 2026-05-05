@@ -24,6 +24,8 @@ const profile = ref({
   avatar: null,
 });
 
+const savedProfile = ref(null);
+
 const birthdayTouched = ref(false);
 
 const passwordForm = ref({
@@ -48,6 +50,8 @@ onMounted(async () => {
       city: data.profile?.city || "",
       avatar: data.profile?.avatar || null,
     };
+
+    savedProfile.value = { ...profile.value };
   } catch (error) {
     console.error("Помилка завантаження профілю:", error);
   }
@@ -116,6 +120,23 @@ async function handleLogout() {
   await authStore.handleLogout();
   router.push("/");
 }
+
+const isProfileChanged = computed(() => {
+  if (!savedProfile.value) return false;
+  return (
+    profile.value.name !== savedProfile.value.name ||
+    profile.value.surname !== savedProfile.value.surname ||
+    profile.value.birthday !== savedProfile.value.birthday ||
+    profile.value.city !== savedProfile.value.city ||
+    avatarFile.value !== null
+  );
+});
+
+const isPasswordFilled = computed(
+  () =>
+    passwordForm.value.oldPassword.length > 0 &&
+    passwordForm.value.newPassword.length >= 8,
+);
 
 const isBirthdayValid = computed(() => {
   const regex = /^\d{2}\.\d{2}\.\d{4}$/;
@@ -225,7 +246,7 @@ function handleBirthdayInput(value) {
 
         <button
           class="btn btn-md btn-primary self-start"
-          :disabled="isLoading"
+          :disabled="isLoading || !isProfileChanged"
           @click="saveProfile"
         >
           Зберегти
@@ -261,6 +282,7 @@ function handleBirthdayInput(value) {
 
         <button
           class="btn btn-md btn-primary self-start mt-2"
+          :disabled="!isPasswordFilled"
           @click="savePassword"
         >
           Зберегти
