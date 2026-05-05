@@ -19,6 +19,7 @@ from .serializers import (
 )
 
 
+@extend_schema(tags=["Auth"])
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
