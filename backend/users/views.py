@@ -23,6 +23,12 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
+    @extend_schema(
+        tags=["Auth"],
+        request=RegisterSerializer,
+        responses={201: UserSerializer},
+        description="Register a new user"
+    )
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer: RegisterSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -39,6 +45,12 @@ class RegisterView(generics.CreateAPIView):
 class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
 
+    @extend_schema(
+        tags=["Auth"],
+        request=LoginSerializer,
+        responses={200: None},
+        description="Login user and return JWT tokens"
+    )
     def post(self, request: Request) -> Response:
         serializer: LoginSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -59,6 +71,7 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
+        tags=["Auth"],
         request=None,
         responses={200: None},
         description="Logout current user on client side by removing JWT tokens"
@@ -75,6 +88,7 @@ class MeView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     @extend_schema(
+        tags=["Auth"],
         responses=UserSerializer,
         description="Get current authenticated user with profile"
     )
@@ -83,6 +97,7 @@ class MeView(APIView):
         return Response(serializer.data)
 
     @extend_schema(
+        tags=["Auth"],
         request=UserProfileUpdateSerializer,
         responses=UserProfileReadSerializer,
         description="Update current user profile"
@@ -107,6 +122,7 @@ class ChangePasswordView(GenericAPIView):
     serializer_class = ChangePasswordSerializer
 
     @extend_schema(
+        tags=["Auth"],
         request=ChangePasswordSerializer,
         responses={200: None},
         description="Change password for current authenticated user"

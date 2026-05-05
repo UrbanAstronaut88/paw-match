@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import mixins, status, viewsets
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -20,6 +20,10 @@ from .serializers import (
 from .services.matching import compare_breeds, get_best_matches
 
 
+@extend_schema_view(
+    list=extend_schema(tags=["Breeds"]),
+    retrieve=extend_schema(tags=["Breeds"]),
+)
 class BreedViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Breed.objects.all().order_by("name")
     serializer_class = BreedSerializer
@@ -30,6 +34,7 @@ class BreedViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MatchView(APIView):
     @extend_schema(
+        tags=["Matching"],
         request=MatchRequestSerializer,
         responses={200: BreedSerializer(many=True)},
         description="Calculate best breed matches and save quiz result for authenticated users",
@@ -67,6 +72,7 @@ class MatchView(APIView):
 
 class BreedCompareView(APIView):
     @extend_schema(
+        tags=["Comparison"],
         parameters=[
             OpenApiParameter(
                 name="first",
@@ -141,6 +147,7 @@ class AddFavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
+        tags=["Favorites"],
         request=None,
         responses={200: None},
         description="Add breed to favorites",
@@ -166,6 +173,7 @@ class RemoveFavoriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
+        tags=["Favorites"],
         request=None,
         responses={200: None},
         description="Remove breed from favorites",
@@ -179,6 +187,9 @@ class RemoveFavoriteView(APIView):
         return Response({"status": "removed"}, status=status.HTTP_200_OK)
 
 
+@extend_schema_view(
+    get=extend_schema(tags=["Favorites"]),
+)
 class FavoriteListView(ListAPIView):
     serializer_class = FavoriteSerializer
     permission_classes = [IsAuthenticated]
@@ -191,6 +202,11 @@ class FavoriteListView(ListAPIView):
         return Favorite.objects.filter(user=self.request.user)
 
 
+@extend_schema_view(
+    list=extend_schema(tags=["Quiz Results"]),
+    retrieve=extend_schema(tags=["Quiz Results"]),
+    create=extend_schema(tags=["Quiz Results"]),
+)
 class QuizResultViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
