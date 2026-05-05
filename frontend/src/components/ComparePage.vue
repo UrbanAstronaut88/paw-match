@@ -12,6 +12,7 @@ const router = useRouter();
 const route = useRoute();
 
 const isLoading = ref(false);
+const compareError = ref("");
 const firstBreed = ref(null);
 const secondBreed = ref(null);
 const conclusion = ref("");
@@ -32,26 +33,6 @@ const secondStats = computed(() =>
   secondBreed.value ? getStats(secondBreed.value.traits) : [],
 );
 
-// onMounted(async () => {
-//   const state = history.state;
-//   if (!state?.breeds || state.breeds.length < 2) {
-//     router.back();
-//     return;
-//   }
-
-//   isLoading.value = true;
-//   try {
-//     const result = await compareBreeds(state.breeds[0], state.breeds[1]);
-//     firstBreed.value = result.first_breed;
-//     secondBreed.value = result.second_breed;
-//     conclusion.value = result.conclusion;
-//   } catch (error) {
-//     console.error("Помилка порівняння:", error);
-//   } finally {
-//     isLoading.value = false;
-//   }
-// });
-
 onMounted(async () => {
   const firstId = route.query.first;
   const secondId = route.query.second;
@@ -68,7 +49,7 @@ onMounted(async () => {
     secondBreed.value = result.second_breed;
     conclusion.value = result.conclusion;
   } catch (error) {
-    console.error("Помилка порівняння:", error);
+    compareError.value = "Не вдалось порівняти породи. Спробуйте ще раз.";
   } finally {
     isLoading.value = false;
   }
@@ -88,6 +69,13 @@ onMounted(async () => {
         class="w-full col-span-12 object-cover rounded-2xl mb-8 -mt-2"
       />
     </AppSplitContent>
+
+    <div
+      v-else-if="compareError"
+      class="col-span-12 flex justify-center py-20 font-primary text-error"
+    >
+      {{ compareError }}
+    </div>
 
     <template v-else-if="firstBreed && secondBreed">
       <div class="col-span-12 row-start-2 flex flex-col gap-2">

@@ -16,6 +16,8 @@ const profileSuccess = ref("");
 const passwordError = ref("");
 const passwordSuccess = ref("");
 
+const loadError = ref("");
+
 const profile = ref({
   name: "",
   surname: "",
@@ -53,7 +55,7 @@ onMounted(async () => {
 
     savedProfile.value = { ...profile.value };
   } catch (error) {
-    console.error("Помилка завантаження профілю:", error);
+    loadError.value = "Не вдалось завантажити профіль. Спробуйте ще раз.";
   }
 });
 
@@ -68,6 +70,21 @@ async function saveProfile() {
   isLoading.value = true;
   profileError.value = "";
   profileSuccess.value = "";
+
+  if (!profile.value.name.trim()) {
+    profileError.value = "Введіть ім'я";
+    return;
+  }
+
+  if (!profile.value.surname.trim()) {
+    profileError.value = "Введіть ім'я";
+    return;
+  }
+
+  if (profile.value.birthday && !isBirthdayValid.value) {
+    profileError.value = "Введіть коректну дату народження";
+    return;
+  }
 
   try {
     const [day, month, year] = profile.value.birthday.split(".");
@@ -188,6 +205,9 @@ function handleBirthdayInput(value) {
     class="grid grid-cols-12 gap-x-8 gap-y-10 items-start content-start pt-10"
   >
     <div class="col-start-5 col-span-4 row-start-2 flex flex-col gap-10 pb-20">
+      <div v-if="loadError" class="font-primary text-secondary text-error">
+        {{ loadError }}
+      </div>
       <div class="flex flex-col gap-8">
         <h2 class="font-primary text-h1 text-gray-100 mb-4">Трішки про тебе</h2>
 

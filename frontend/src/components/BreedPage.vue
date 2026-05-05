@@ -21,6 +21,8 @@ const breed = ref(null);
 const isLoading = ref(false);
 const isFavorite = ref(false);
 const showAuthModal = ref(false);
+const loadError = ref("");
+const favoriteError = ref("");
 
 const stats = computed(() => {
   if (!breed.value) return [];
@@ -45,7 +47,7 @@ onMounted(async () => {
       );
     }
   } catch (error) {
-    console.error("Помилка завантаження породи:", error);
+    loadError.value = "Не вдалось завантажити породу. Спробуйте ще раз.";
   } finally {
     isLoading.value = false;
   }
@@ -70,7 +72,10 @@ async function toggleFavorite() {
       isFavorite.value = true;
     }
   } catch (error) {
-    console.error("Помилка:", error);
+    favoriteError.value = "Не вдалось оновити улюблене.";
+    setTimeout(() => {
+      favoriteError.value = "";
+    }, 3000);
   }
 }
 </script>
@@ -82,6 +87,13 @@ async function toggleFavorite() {
       class="col-span-12 flex justify-center items-center py-20 font-primary text-gray-60"
     >
       Завантаження...
+    </div>
+
+    <div
+      v-else-if="loadError"
+      class="col-span-12 flex justify-center py-20 font-primary text-error"
+    >
+      {{ loadError }}
     </div>
 
     <template v-else-if="breed">
@@ -112,12 +124,16 @@ async function toggleFavorite() {
 
         <AppHomeTag :type="breed.traits.housing_type.value" class="mt-2" />
 
+        <span
+          v-if="favoriteError"
+          class="font-primary text-secondary text-error"
+        >
+          {{ favoriteError }}
+        </span>
+
         <div class="flex items-center gap-4 mt-2.5">
           <template v-if="isFavorite">
-            <button
-              class="btn btn-md btn-secondary"
-              @click="toggleFavorite"
-            >
+            <button class="btn btn-md btn-secondary" @click="toggleFavorite">
               Видалити породу
             </button>
             <button

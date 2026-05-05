@@ -9,6 +9,7 @@ import shitsu from "../../assets/dogs/Shi-tsu.png";
 
 const authStore = useAuthStore();
 const favorites = ref([]);
+const error = ref("");
 
 const defaultFavorites = [
   { id: null, title: "Чихуахуа", img: chihuahua },
@@ -31,7 +32,7 @@ onMounted(async () => {
     }));
     favorites.value = results;
   } catch (error) {
-    console.error("Помилка завантаження улюблених:", error);
+    error.value = "Не вдалось завантажити улюблені породи";
     favorites.value = defaultFavorites;
   }
 });
@@ -42,42 +43,51 @@ async function removeLike(breedId, index) {
     await removeFavorite(breedId);
     favorites.value.splice(index, 1);
   } catch (error) {
-    console.error("Помилка видалення:", error);
+    error.value = "Не вдалось видалити породу";
+    setTimeout(() => {
+      error.value = "";
+    }, 3000);
   }
 }
 </script>
 
 <template>
-  <div class="grid grid-cols-3 gap-6 h-[169px]">
-    <template v-if="favorites.length">
-      <div
-        v-for="(favorite, index) in favorites"
-        :key="index"
-        class="flex flex-col gap-4"
-      >
-        <img
-          :src="favorite.img"
-          :alt="favorite.title"
-          class="rounded-xl w-full h-[131px] object-cover"
-        />
-        <div class="flex flex-row justify-between items-center px-1">
-          <h3 class="text-gray-100 text-h3 font-primary m-0">
-            {{ favorite.title }}
-          </h3>
-          <component
-            :is="HeartIcon"
-            class="cursor-pointer"
-            :class="favorite.id ? 'text-primary' : 'text-gray-30'"
-            @click="removeLike(favorite.id, index)"
-          />
-        </div>
-      </div>
-    </template>
+  <div class="flex flex-col gap-2">
+    <span v-if="!error" class="font-primary text-secondary text-error">
+      {{ error }}
+    </span>
 
-    <div v-else class="col-span-3 flex items-center justify-center">
-      <span class="font-primary text-secondary text-gray-60">
-        Улюблених порід поки немає
-      </span>
+    <div class="grid grid-cols-3 gap-6 h-[169px]">
+      <template v-if="favorites.length">
+        <div
+          v-for="(favorite, index) in favorites"
+          :key="index"
+          class="flex flex-col gap-4"
+        >
+          <img
+            :src="favorite.img"
+            :alt="favorite.title"
+            class="rounded-xl w-full h-[131px] object-cover"
+          />
+          <div class="flex flex-row justify-between items-center px-1">
+            <h3 class="text-gray-100 text-h3 font-primary m-0">
+              {{ favorite.title }}
+            </h3>
+            <component
+              :is="HeartIcon"
+              class="cursor-pointer"
+              :class="favorite.id ? 'text-primary' : 'text-gray-30'"
+              @click="removeLike(favorite.id, index)"
+            />
+          </div>
+        </div>
+      </template>
+
+      <div v-else class="col-span-3 flex items-center justify-center">
+        <span class="font-primary text-secondary text-gray-60">
+          Улюблених порід поки немає
+        </span>
+      </div>
     </div>
   </div>
 </template>

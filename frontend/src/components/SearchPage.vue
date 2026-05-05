@@ -26,6 +26,9 @@ const showAuthModal = ref(false);
 
 const favoriteIds = ref(new Set());
 
+const fetchError = ref("");
+const favoriteError = ref("");
+
 function parseArrayQuery(val) {
   if (!val) return [];
   return Array.isArray(val) ? val : [val];
@@ -89,7 +92,7 @@ async function fetchBreeds() {
       ? response
       : (response.results ?? []);
   } catch (error) {
-    console.error("Помилка завантаження порід:", error);
+    fetchError.value = "Не вдалось завантажити породи. Спробуйте ще раз.";
     allBreeds.value = [];
   } finally {
     isLoading.value = false;
@@ -144,7 +147,10 @@ async function handleToggleLike(breedId) {
     }
     favoriteIds.value = new Set(favoriteIds.value);
   } catch (error) {
-    console.error("Помилка:", error);
+    favoriteError.value = "Не вдалось оновити улюблене.";
+    setTimeout(() => {
+      favoriteError.value = "";
+    }, 3000);
   }
 }
 
@@ -217,6 +223,13 @@ function goBack() {
       Завантаження...
     </div>
 
+    <div
+      v-else-if="fetchError"
+      class="col-span-12 flex justify-center py-20 font-primary text-error"
+    >
+      {{ fetchError }}
+    </div>
+
     <template v-else>
       <div
         v-if="hasActiveSearch"
@@ -269,5 +282,11 @@ function goBack() {
         </div>
       </AppModal>
     </template>
+    <div
+      v-if="favoriteError"
+      class="col-span-12 flex justify-center py-4 font-primary text-error"
+    >
+      {{ favoriteError }}
+    </div>
   </template>
 </template>

@@ -18,6 +18,7 @@ const quizStatus = ref(savedState.quizStatus || "answering");
 const currentStep = ref(savedState.currentStep || 0);
 const answers = ref(savedState.answers || {});
 const resultData = ref(savedState.resultData || null);
+const quizError = ref("");
 
 watch(
   [quizStatus, currentStep, answers],
@@ -99,9 +100,8 @@ async function submit() {
 
     quizStatus.value = "result";
   } catch (error) {
-    console.error("Помилка:", error);
     quizStatus.value = "answering";
-    alert("Щось пішло не так. Спробуйте ще раз!");
+    quizError.value = "Щось пішло не так. Спробуйте ще раз.";
   }
 }
 
@@ -131,6 +131,13 @@ function handleRetry() {
       v-model="answers[currentQuestion.id]"
       @next="next"
     />
+
+    <div
+      v-if="quizError && quizStatus === 'answering'"
+      class="col-start-5 col-span-4 row-start-3 font-primary text-secondary text-error"
+    >
+      {{ quizError }}
+    </div>
 
     <AppSplitContent
       v-else-if="quizStatus === 'loading'"

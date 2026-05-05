@@ -14,6 +14,8 @@ const favorites = ref([]);
 const isLoading = ref(false);
 const isCompareMode = ref(false);
 const selectedIds = ref([]);
+const fetchError = ref("");
+const removeError = ref("");
 
 const canCompare = computed(() => selectedIds.value.length === 2);
 
@@ -32,7 +34,8 @@ onMounted(async () => {
       image: f.breed.image || f.breed.image_url,
     }));
   } catch (error) {
-    console.error("Помилка завантаження улюблених:", error);
+    fetchError.value =
+      "Не вдалось завантажити улюблені породи. Спробуйте ще раз.";
     favorites.value = mockFavorites;
   } finally {
     isLoading.value = false;
@@ -45,7 +48,10 @@ async function handleRemove(breedId) {
     favorites.value = favorites.value.filter((f) => f.id !== breedId);
     selectedIds.value = selectedIds.value.filter((id) => id !== breedId);
   } catch (error) {
-    console.error("Помилка видалення:", error);
+    removeError.value = "Не вдалось видалити породу.";
+    setTimeout(() => {
+      removeError.value = "";
+    }, 3000);
   }
 }
 
@@ -68,35 +74,15 @@ function toggleSelect(breedId) {
   }
 }
 
-// async function handleCompare() {
-//   if (!canCompare.value) return;
-//   try {
-//     const result = await compareBreeds(
-//       selectedIds.value[0],
-//       selectedIds.value[1],
-//     );
-//     router.push({
-//       path: "/compare",
-//       state: { result, breeds: selectedIds.value },
-//     });
-//   } catch (error) {
-//     console.error("Помилка порівняння:", error);
-//   }
-// }
-
 async function handleCompare() {
   if (!canCompare.value) return;
-  try {
-    router.push({
-      path: "/compare",
-      query: {
-        first: selectedIds.value[0],
-        second: selectedIds.value[1],
-      },
-    });
-  } catch (error) {
-    console.error("Помилка:", error);
-  }
+  router.push({
+    path: "/compare",
+    query: {
+      first: selectedIds.value[0],
+      second: selectedIds.value[1],
+    },
+  });
 }
 
 const selectedIdsStrings = computed({
@@ -178,41 +164,56 @@ const selectedIdsStrings = computed({
         Завантаження...
       </div>
 
-      <div v-else-if="favorites.length > 0" class="grid grid-cols-4 gap-8">
-        <div v-for="breed in favorites" :key="breed.id" class="relative">
-          <label v-if="isCompareMode" class="absolute top-4 right-4 z-10">
-            <AppCheckBox
-              :icon="CheckIcon"
-              :value="String(breed.id)"
-              variant="checkbox-round"
-              v-model="selectedIdsStrings"
-              :disabled="
-                selectedIds.length >= 2 && !selectedIds.includes(breed.id)
-              "
-            />
-          </label>
+      <div
+        v-else-if="fetchError"
+        class="flex justify-center py-20 font-primary text-error"
+      >
+        {{ fetchError }}
+      </div>
 
-          <div :class="isCompareMode ? 'pointer-events-none' : ''">
-            <AppBreedCard
-              :title="breed.name"
-              :image="breed.image"
-              :liked="true"
-              @toggle-like="handleRemove(breed.id)"
-              @view="router.push(`/breed/${breed.id}`)"
-            />
+      <template v-else>
+        <span v-if="removeError" class="font-primary text-secondary text-error">
+          {{ removeError }}
+        </span>
+        <div v-else-if="favorites.length > 0" class="grid grid-cols-4 gap-8">
+          <div v-for="breed in favorites" :key="breed.id" class="relative">
+            <label v-if="isCompareMode" class="absolute top-4 right-4 z-10">
+              <AppCheckBox
+                :icon="CheckIcon"
+                :value="String(breed.id)"
+                variant="checkbox-round"
+                v-model="selectedIdsStrings"
+                :disabled="
+                  selectedIds.length >= 2 && !selectedIds.includes(breed.id)
+                "
+              />
+            </label>
+
+            <div :class="isCompareMode ? 'pointer-events-none' : ''">
+              <AppBreedCard
+                :title="breed.name"
+                :image="breed.image"
+                :liked="true"
+                @toggle-like="handleRemove(breed.id)"
+                @view="router.push(`/breed/${breed.id}`)"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div v-else class="flex flex-col items-center gap-6 py-20">
-        <h3 class="text-h3 font-primary text-gray-100">
-          Ще немає улюблених порід...
-        </h3>
+        <div v-else class="flex flex-col items-center gap-6 py-20">
+          <h3 class="text-h3 font-primary text-gray-100">
+            Ще немає улюблених порід...
+          </h3>
 
-        <button class="btn btn-md btn-primary" @click="router.push('/explore')">
-          Показати породи
-        </button>
-      </div>
+          <button
+            class="btn btn-md btn-primary"
+            @click="router.push('/explore')"
+          >
+            Показати породи
+          </button>
+        </div>
+      </template>
     </div>
   </div>
 </template>
