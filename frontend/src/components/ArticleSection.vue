@@ -18,18 +18,24 @@ defineProps({
     default: "text-main font-primary text-gray-100",
   },
 });
+
+defineEmits(["click"]);
 </script>
 
 <template>
-  <div class="article-section" :class="gap">
+  <div class="article-section" :class="contentGap">
     <div class="article-section-header">
       <div class="article-section-header-text">
-        <h2 class="article-section-title" :class="titleStyle">{{ title }}</h2>
+        <h1 class="article-section-title" :class="titleStyle">{{ title }}</h1>
         <p class="article-section-description" :class="descriptionStyle">
           {{ description }}
         </p>
       </div>
-      <AppIconButton class="btn-primary shrink-0" :icon="ArrowRightIcon" />
+      <AppIconButton
+        class="btn-primary shrink-0"
+        :icon="ArrowRightIcon"
+        @click="$emit('click')"
+      />
     </div>
 
     <slot></slot>

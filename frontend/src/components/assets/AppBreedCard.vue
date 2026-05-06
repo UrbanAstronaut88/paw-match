@@ -1,7 +1,9 @@
 <script setup>
 import HeartIcon from "../../assets/icons/ph_heart-bold-1.svg";
 import HeartFillIcon from "../../assets/icons/ph_heart-fill-1.svg";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+
+const emit = defineEmits(["view", "toggle-like"]);
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -11,6 +13,13 @@ const props = defineProps({
 });
 
 const isLiked = ref(props.liked);
+
+watch(
+  () => props.liked,
+  (val) => {
+    isLiked.value = val;
+  },
+);
 
 function toggleLike() {
   isLiked.value = !isLiked.value;
@@ -24,8 +33,8 @@ function toggleLike() {
   >
     <div :class="size === 'big' ? 'p-6' : 'p-4'">
       <div
-        class="w-full overflow-hidden shrink-0"
-        :class="size === 'big' ? 'h-125' : 'h-67'"
+        class="overflow-hidden shrink-0"
+        :class="size === 'big' ? 'h-125 w-146' : 'h-67 w-67'"
       >
         <img :src="image" :alt="title" class="w-full h-full object-cover" />
       </div>
@@ -43,7 +52,7 @@ function toggleLike() {
           </span>
           <button
             class="cursor-pointer outline-none bg-transparent border-none p-0 flex items-center justify-center"
-            @click="toggleLike"
+            @click.stop="emit('toggle-like')"
           >
             <component
               :is="isLiked ? HeartFillIcon : HeartIcon"
@@ -56,6 +65,7 @@ function toggleLike() {
         <button
           class="btn btn-primary self-start"
           :class="size === 'big' ? 'btn-md' : 'btn-sm'"
+          @click.stop="emit('view')"
         >
           Переглянути
         </button>

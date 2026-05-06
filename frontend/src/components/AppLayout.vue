@@ -2,6 +2,8 @@
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 import AppPawsBackground from "./assets/AppPawsBackground.vue";
+import { onMounted } from "vue";
+import { useAuthStore } from "../stores/auth";
 </script>
 
 <template>
@@ -9,7 +11,7 @@ import AppPawsBackground from "./assets/AppPawsBackground.vue";
     <Header />
     <AppPawsBackground />
     <main class="relative z-10 flex-1 w-full max-w-[1296px] mx-auto">
-      <slot />
+      <RouterView />
     </main>
     <Footer />
   </div>
