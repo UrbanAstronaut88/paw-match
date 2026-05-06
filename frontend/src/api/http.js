@@ -1,10 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN || "";
 const API_PREFIX = import.meta.env.VITE_API_PREFIX || "/api/v1";
 
 export const http = axios.create({
-  baseURL: API_PREFIX,
+  baseURL: `${BACKEND_ORIGIN}${API_PREFIX}`,
 });
 
 http.interceptors.request.use((config) => {
