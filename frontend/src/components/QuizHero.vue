@@ -2,6 +2,7 @@
 import TargetIcon from "../assets/icons/ph_target-bold.svg";
 import ClockIcon from "../assets/icons/ph_timer-bold.svg";
 import PawIcon from "../assets/icons/ph_paw-print-bold.svg";
+import CardDog from "../assets/card_dog.png";
 
 defineProps({
   title: {
@@ -14,7 +15,7 @@ defineProps({
   },
   image: {
     type: String,
-    default: null,
+    default: CardDog,
   },
   features: {
     type: Array,
@@ -25,6 +26,8 @@ defineProps({
     ],
   },
 });
+
+defineEmits(["click"]);
 </script>
 
 <template>
@@ -51,6 +54,8 @@ defineProps({
       </div>
     </div>
 
-    <button class="btn btn-md btn-primary self-start">Почати квіз</button>
+    <button class="btn btn-md btn-primary self-start" @click="$emit('click')">
+      Почати квіз
+    </button>
   </div>
 </template>

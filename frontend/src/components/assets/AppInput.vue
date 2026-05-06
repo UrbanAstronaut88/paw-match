@@ -4,6 +4,7 @@ import EyeOffIcon from "../../assets/icons/ph_eye-closed-bold.svg";
 import { ref, computed, onMounted, watch } from "vue";
 
 defineOptions({ inheritAttrs: false });
+const emit = defineEmits(["update:modelValue", "blur", "keydown"]);
 
 const props = defineProps({
   label: { type: String, default: "" },
@@ -21,8 +22,6 @@ defineExpose({ inputRef });
 onMounted(() => {
   if (props.autofocus) inputRef.value?.focus();
 });
-
-const emit = defineEmits(["update:modelValue", "blur"]);
 
 const showPassword = ref(false);
 
@@ -47,6 +46,7 @@ const inputType = computed(() => {
         :value="props.modelValue"
         @input="emit('update:modelValue', $event.target.value)"
         @blur="emit('blur', $event)"
+        @keydown="emit('keydown', $event)"
         v-bind="$attrs"
       />
 

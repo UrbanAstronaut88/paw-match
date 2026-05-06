@@ -1,14 +1,17 @@
 <script setup>
 import AppInput from "./AppInput.vue";
 import { ref, computed } from "vue";
+import { useAuthStore } from "../../stores/auth";
+import { useRouter } from "vue-router";
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 
 const emailRef = ref(null);
 const passwordRef = ref(null);
-
-const emit = defineEmits(["next"]);
 
 const isEmailValid = computed(() =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value),
@@ -20,6 +23,27 @@ const isFormValid = computed(
 
 const emailTouched = ref(false);
 const passwordTouched = ref(false);
+const isLoading = ref(false);
+const serverError = ref("");
+
+async function handleLogin() {
+  if (!isFormValid.value) return;
+
+  isLoading.value = true;
+  serverError.value = "";
+
+  try {
+    await authStore.handleLogin({
+      email: email.value,
+      password: password.value,
+    });
+    router.push("/");
+  } catch (error) {
+    serverError.value = "Невірна електронна адреса або пароль";
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 function handleEnter() {
   if (!email.value) return;
@@ -27,10 +51,7 @@ function handleEnter() {
     passwordRef.value?.inputRef?.focus();
     return;
   }
-  if (isFormValid.value) {
-    alert("✅ Усі перевірки пройдені успішно!\nДані відправляються далі.");
-    emit("next", { email: email.value, password: password.value });
-  }
+  handleLogin();
 }
 
 function handleForgotPassword() {
@@ -68,6 +89,10 @@ function handleForgotPassword() {
         @update:model-value="passwordTouched = false"
         ref="passwordRef"
       />
+
+      <span v-if="serverError" class="font-primary text-secondary text-error">
+        {{ serverError }}
+      </span>
     </div>
 
     <button class="btn btn-tertiary mt-4" @click="handleForgotPassword">
@@ -76,10 +101,10 @@ function handleForgotPassword() {
 
     <button
       class="btn btn-primary btn-md mt-10"
-      :disabled="!isFormValid"
-      @click="handleEnter"
+      :disabled="!isFormValid || isLoading"
+      @click="handleLogin"
     >
-      Продовжити
+      {{ isLoading ? "Завантаження..." : "Продовжити" }}
     </button>
   </div>
 </template>
