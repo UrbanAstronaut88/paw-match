@@ -1,34 +1,35 @@
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
   stats: {
     type: Array,
-    default: () => [
-      {
-        emoji: "🐶",
-        label: "Розмір",
-        value: 2,
-        color: "var(--color-size-bar)",
-      },
-      {
-        emoji: "⚡",
-        label: "Рівень активності",
-        value: 3,
-        color: "var(--color-activity-bar)",
-      },
-      {
-        emoji: "🧴",
-        label: "Складність догляду",
-        value: 4,
-        color: "var(--color-care-bar)",
-      },
-      {
-        emoji: "👶",
-        label: "Підходить для сімей з дітьми",
-        value: 1,
-        color: "var(--color-children-bar)",
-      },
-    ],
+    required: true,
   },
+});
+
+const statConfigs = [
+  { emoji: "🐶", label: "Розмір", color: "var(--color-size-bar)" },
+  {
+    emoji: "⚡",
+    label: "Рівень активності",
+    color: "var(--color-activity-bar)",
+  },
+  { emoji: "🧴", label: "Складність догляду", color: "var(--color-care-bar)" },
+  {
+    emoji: "👶",
+    label: "Підходить для сімей з дітьми",
+    color: "var(--color-children-bar)",
+  },
+];
+
+const displayStats = computed(() => {
+  return statConfigs.map((config, index) => {
+    return {
+      ...config,
+      value: props.stats[index]?.value || 0,
+    };
+  });
 });
 
 const getWidth = (value) => `${value * 20}%`;
@@ -37,7 +38,7 @@ const getWidth = (value) => `${value * 20}%`;
 <template>
   <div class="flex flex-col gap-6 w-102.75 h-62">
     <div
-      v-for="(stat, index) in stats"
+      v-for="(stat, index) in displayStats"
       :key="index"
       class="flex flex-row gap-4"
     >

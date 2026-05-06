@@ -1,0 +1,71 @@
+[
+  {
+    "id": "Q1",
+    "question": "Де житиме ваша майбутня собака?",
+    "field": "housing_type",
+    "options": [
+      { "label": "Квартира", "value": "Apartment" },
+      { "label": "Будинок", "value": "House" },
+      { "label": "Квартира/Будинок", "value": "Apartment/House" }
+    ]
+  },
+  {
+    "id": "Q2",
+    "question": "Скільки часу на день ви готові приділяти активностям?",
+    "field": "energy",
+    "options": [
+      { "label": "Мало", "value": "1" },
+      { "label": "Середньо", "value": "3" },
+      { "label": "Багато", "value": "5" }
+    ]
+  },
+  {
+    "id": "Q3",
+    "question": "Якому розміру собаки ви віддаєте перевагу?",
+    "field": "size",
+    "options": [
+      { "label": "Маленький", "value": "1" },
+      { "label": "Середній", "value": "2" },
+      { "label": "Великий", "value": "3" }
+    ]
+  },
+  {
+    "id": "Q4",
+    "question": "Чи є у вас вдома діти?",
+    "field": "kids",
+    "options": [
+      { "label": "Дуже висока (пріоритет)", "value": "5" },
+      { "label": "Висока/Середня", "value": "3" },
+      { "label": "Низька", "value": "1" }
+    ]
+  },
+  {
+    "id": "Q5",
+    "question": "Грумінг та линька?",
+    "field": "grooming",
+    "options": [
+      { "label": "Дуже інтенсивно", "value": "5" },
+      { "label": "Високо/Середньо", "value": "3" },
+      { "label": "Низько/Дуже низько", "value": "1" }
+    ]
+  },
+  {
+    "id": "Q6",
+    "question": "Ідеальний характер собаки?",
+    "field": null,
+    "options": [
+      { "label": "Спокійний/Лежебока", "value": "calm" },
+      { "label": "Розумний/Робочий", "value": "smart" },
+      { "label": "Дружелюбний/Товариський", "value": "friendly" }
+    ]
+  },
+  {
+    "id": "Q7",
+    "question": "Ваш рівень досвіду?",
+    "field": null,
+    "options": [
+      { "label": "Вперше заводжу собаку", "value": "beginner" },
+      { "label": "Досвідчений власник", "value": "experienced" }
+    ]
+  }
+]

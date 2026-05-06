@@ -1,15 +1,23 @@
 <script setup>
-defineOptions({ inheritAttrs: false });
+const props = defineProps({
+  value: { type: [String, Number], required: true },
+  name: { type: String, required: true },
+  modelValue: { type: [String, Number], default: null },
+});
+
+const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <template>
-  <label class="flex items-center gap-2">
+  <div class="flex items-center cursor-pointer">
     <input
       type="radio"
-      name="group1"
+      :name="name"
+      :value="value"
+      :checked="modelValue === value"
       class="form-input-hidden"
-      v-bind="$attrs"
+      @change="emit('update:modelValue', value)"
     />
     <div class="radio"></div>
-  </label>
+  </div>
 </template>

@@ -14,11 +14,11 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=100, blank=True)
     surname = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=100, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
     avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} profile"
+        return f"{self.user.email} profile"
 
 
 @receiver(post_save, sender=User)
