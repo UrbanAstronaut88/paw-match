@@ -56,7 +56,7 @@ function handleAvatarClick() {
 <template>
   <header class="app-header rounded-2xl min-h-20 sticky top-0 z-50">
     <div
-      class="flex items-center justify-between h-full max-w-[1296px] mx-auto"
+      class="flex items-center justify-between h-full w-[1296px] mx-auto"
     >
       <a href="/" class="flex items-center gap-2 no-underline">
         <span class="font-primary text-h1 text-gray-100">Petly</span>
