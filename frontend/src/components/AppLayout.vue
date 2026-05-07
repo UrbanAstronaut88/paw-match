@@ -8,7 +8,7 @@ import AppPawsBackground from "./assets/AppPawsBackground.vue";
   <div class="flex relative flex-col min-h-screen">
     <Header />
     <AppPawsBackground />
-    <main class="relative z-10 flex-1 w-[1296px] mx-auto">
+    <main class="relative z-10 flex-1 w-[1296px] mx-auto mx-18">
       <RouterView />
     </main>
     <Footer />

@@ -1,39 +1,40 @@
 <script setup>
 import HeartIcon from "../../assets/icons/ph_heart-fill.svg";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { listFavorites, removeFavorite } from "../../api/breeds";
 import { useAuthStore } from "../../stores/auth";
-import chihuahua from "../../assets/dogs/Chihua-hua.png";
-import mops from "../../assets/dogs/Mops.png";
-import shitsu from "../../assets/dogs/Shi-tsu.png";
+import { useRouter } from "vue-router";
+import AppModal from "./AppModal.vue";
 
 const authStore = useAuthStore();
+const router = useRouter();
+
 const favorites = ref([]);
 const error = ref("");
+const showAuthModal = ref(false);
 
-const defaultFavorites = [
-  { id: null, title: "Чихуахуа", img: chihuahua },
-  { id: null, title: "Мопс", img: mops },
-  { id: null, title: "Ші-тцу", img: shitsu },
-];
+const SLOTS = 3;
+
+const displaySlots = computed(() => {
+  const slots = [];
+  for (let i = 0; i < SLOTS; i++) {
+    slots.push(favorites.value[i] || null);
+  }
+  return slots;
+});
 
 onMounted(async () => {
-  if (!authStore.isAuthenticated) {
-    favorites.value = defaultFavorites;
-    return;
-  }
+  if (!authStore.isAuthenticated) return;
 
   try {
     const response = await listFavorites();
-    const results = response.results.slice(0, 3).map((f) => ({
+    favorites.value = response.results.slice(0, SLOTS).map((f) => ({
       id: f.breed.id,
       title: f.breed.name,
       img: f.breed.image || f.breed.image_url,
     }));
-    favorites.value = results;
-  } catch (error) {
+  } catch {
     error.value = "Не вдалось завантажити улюблені породи";
-    favorites.value = defaultFavorites;
   }
 });
 
@@ -42,52 +43,82 @@ async function removeLike(breedId, index) {
   try {
     await removeFavorite(breedId);
     favorites.value.splice(index, 1);
-  } catch (error) {
+  } catch {
     error.value = "Не вдалось видалити породу";
     setTimeout(() => {
       error.value = "";
     }, 3000);
   }
 }
+
+function handleHeartClick(favorite) {
+  if (!authStore.isAuthenticated) {
+    showAuthModal.value = true;
+    return;
+  }
+  if (favorite) {
+    const index = favorites.value.findIndex((f) => f.id === favorite.id);
+    removeLike(favorite.id, index);
+  }
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-2">
-    <span v-if="!error" class="font-primary text-secondary text-error">
+    <span v-if="error" class="font-primary text-secondary text-error">
       {{ error }}
     </span>
 
-    <div class="grid grid-cols-3 gap-6 h-[169px]">
-      <template v-if="favorites.length">
-        <div
-          v-for="(favorite, index) in favorites"
-          :key="index"
-          class="flex flex-col gap-4"
-        >
+    <div class="grid grid-cols-3 gap-6 h-[171px]">
+      <div
+        v-for="(slot, index) in displaySlots"
+        :key="index"
+        class="flex flex-col gap-4"
+      >
+        <template v-if="slot">
           <img
-            :src="favorite.img"
-            :alt="favorite.title"
+            :src="slot.img"
+            :alt="slot.title"
             class="rounded-xl w-full h-[131px] object-cover"
           />
-          <div class="flex flex-row justify-between items-center px-1">
+          <div class="flex flex-row justify-between items-start">
             <h3 class="text-gray-100 text-h3 font-primary m-0">
-              {{ favorite.title }}
+              {{ slot.title }}
             </h3>
             <component
               :is="HeartIcon"
-              class="cursor-pointer"
-              :class="favorite.id ? 'text-primary' : 'text-gray-30'"
-              @click="removeLike(favorite.id, index)"
+              class="size-4 cursor-pointer text-primary shrink-0"
+              @click="handleHeartClick(slot)"
             />
           </div>
-        </div>
-      </template>
+        </template>
 
-      <div v-else class="col-span-3 flex items-center justify-center">
-        <span class="font-primary text-secondary text-gray-60">
-          Улюблених порід поки немає
-        </span>
+        <template v-else>
+          <div class="rounded-xl w-full h-[171px] bg-gray-20" />
+        </template>
       </div>
     </div>
+
+    <AppModal
+      v-if="showAuthModal"
+      title="Увійдіть або створіть акаунт"
+      description="Щоб користуватися функцією обраного та зберігати свої вподобання і ті ж кнопки"
+      @close="showAuthModal = false"
+    >
+      <div class="flex gap-4">
+        <button
+          class="btn btn-primary btn-md flex-1"
+          @click="router.push('/auth')"
+        >
+          Увійти
+        </button>
+        <button
+          class="btn btn-secondary btn-md flex-1"
+          @click="showAuthModal = false"
+        >
+          Скасувати
+        </button>
+      </div>
+    </AppModal>
   </div>
 </template>
