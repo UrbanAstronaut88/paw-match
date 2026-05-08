@@ -33,12 +33,16 @@ const socialIcons = {
 </script>
 
 <template>
-  <footer class="app-footer rounded-2xl">
-    <div class="flex items-start justify-between m-auto gap-6 px-18 py-6">
+  <footer
+    class="w-full rounded-2xl bg-white shadow-[0px_-6px_10px_rgba(0,0,0,0.05)]"
+  >
+    <div
+      class="max-w-[1296px] mx-auto flex items-start justify-between m-auto gap-6 py-6"
+    >
       <div class="flex flex-col gap-2 max-w-45">
         <span class="font-primary text-main text-gray-100">© 2026 Petly</span>
         <span class="font-primary text-secondary text-gray-80"
-          >"Розумний підбір улюбленця"</span
+          >Розумний підбір улюбленця</span
         >
       </div>
 
