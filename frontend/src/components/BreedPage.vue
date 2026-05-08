@@ -164,8 +164,8 @@ async function toggleFavorite() {
 
     <AppModal
       v-if="showAuthModal"
-      title="Потрібно увійти"
-      description="Увійдіть в акаунт щоб додавати породи в улюблене"
+      title="Увійдіть або створіть акаунт"
+      description="Щоб додавати породи в обране та зберігати свої вподобання і ті ж кнопки"
       @close="showAuthModal = false"
     >
       <div class="flex gap-4">

@@ -5,12 +5,23 @@ import QuizHero from "./QuizHero.vue";
 import AppArticleCards from "./assets/AppArticleCards.vue";
 import AppFavoritesMiniCards from "./assets/AppFavoritesMiniCards.vue";
 import { useAuthStore } from "../stores/auth";
+import AppModal from "./assets/AppModal.vue";
+import { ref } from "vue";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const showAuthModal = ref(false);
 
 function open(adress) {
   router.push(`/${adress}`);
+}
+
+function openFavorites() {
+  if (!authStore.isAuthenticated) {
+    showAuthModal.value = true;
+    return;
+  }
+  router.push("/favorites");
 }
 </script>
 
@@ -32,26 +43,34 @@ function open(adress) {
       <ArticleSection
         title="Улюблені породи"
         description="Тут зібрані всі породи, які тобі сподобались"
-        @click="open('favorites')"
+        @click="openFavorites"
       >
         <div class="relative">
-          <AppFavoritesMiniCards
-            :class="{
-              'blur-sm pointer-events-none select-none':
-                !authStore.isAuthenticated,
-            }"
-          />
-
-          <div
-            v-if="!authStore.isAuthenticated"
-            class="absolute inset-0 flex items-center justify-center"
-          >
-            <button class="btn btn-secondary btn-md" @click.stop="open('auth')">
-              Увійти
-            </button>
-          </div>
+          <AppFavoritesMiniCards />
         </div>
       </ArticleSection>
     </div>
   </div>
+
+  <AppModal
+    v-if="showAuthModal"
+    title="Увійдіть або створіть акаунт"
+    description="Щоб користуватися функцією обраного та зберігати свої вподобання"
+    @close="showAuthModal = false"
+  >
+    <div class="flex gap-4">
+      <button
+        class="btn btn-primary btn-md flex-1"
+        @click="router.push('/auth')"
+      >
+        Увійти
+      </button>
+      <button
+        class="btn btn-secondary btn-md flex-1"
+        @click="showAuthModal = false"
+      >
+        Скасувати
+      </button>
+    </div>
+  </AppModal>
 </template>
