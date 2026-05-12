@@ -69,7 +69,7 @@ function handleHeartClick(favorite) {
       {{ error }}
     </span>
 
-    <div class="grid grid-cols-3 gap-6 h-[171px]">
+    <div class="grid grid-cols-3 gap-6 min-h-[168px]">
       <div
         v-for="(slot, index) in displaySlots"
         :key="index"
@@ -82,19 +82,22 @@ function handleHeartClick(favorite) {
             class="rounded-xl w-full h-[131px] object-cover"
           />
           <div class="flex flex-row justify-between items-start">
-            <h3 class="text-gray-100 text-h3 font-primary m-0">
+            <!-- Додано класи flex-1, pr-2, line-clamp-2, break-words -->
+            <h3
+              class="text-gray-100 text-secondary font-primary flex-1 pr-2 line-clamp-2 break-words"
+            >
               {{ slot.title }}
             </h3>
             <component
               :is="HeartIcon"
-              class="size-4 cursor-pointer text-primary shrink-0"
+              class="size-4 cursor-pointer text-primary shrink-0 mt-1"
               @click="handleHeartClick(slot)"
             />
           </div>
         </template>
 
         <template v-else>
-          <div class="rounded-xl w-full h-[171px] bg-gray-20" />
+          <div class="rounded-xl w-full h-[168px] bg-gray-20" />
         </template>
       </div>
     </div>

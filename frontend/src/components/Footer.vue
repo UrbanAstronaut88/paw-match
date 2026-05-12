@@ -39,16 +39,16 @@ const socialIcons = {
     <div
       class="max-w-[1296px] mx-auto flex items-start justify-between m-auto gap-6 py-6"
     >
-      <div class="flex flex-col gap-2 max-w-45">
+      <div class="flex flex-col gap-2 max-w-50">
         <span class="font-primary text-main text-gray-100">© 2026 Petly</span>
-        <span class="font-primary text-secondary text-gray-80"
+        <span class="font-primary text-small text-gray-80"
           >Розумний підбір улюбленця</span
         >
       </div>
 
       <div class="flex flex-col gap-2">
         <span class="font-primary text-main text-gray-100">Команда</span>
-        <span class="font-primary text-secondary text-gray-80">
+        <span class="font-primary text-small text-gray-80">
           {{ team.join(" · ") }}
         </span>
       </div>

@@ -34,7 +34,7 @@ function openFavorites() {
       <ArticleSection
         title="Світ улюбленців"
         description="Статті про собак — від вибору до догляду та розуміння поведінки"
-        description-style="max-w-111.5"
+        description-style="max-w-111.5 text-main font-primary text-gray-80"
         @click="open('pets-world')"
       >
         <AppArticleCards />

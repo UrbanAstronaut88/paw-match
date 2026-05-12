@@ -12,10 +12,13 @@ defineProps({
     required: true,
   },
   contentGap: { type: String, default: "gap-8" },
+  containerPadding: { type: String, default: "p-8" },
+  headerGap: { type: String, default: 'gap-4' },
+  alignment: { type: String, default: ' ' },
   titleStyle: { type: String, default: "text-h1 font-primary text-gray-100" },
   descriptionStyle: {
     type: String,
-    default: "text-main font-primary text-gray-100",
+    default: "text-main font-primary text-gray-80",
   },
 });
 
@@ -23,11 +26,14 @@ defineEmits(["click"]);
 </script>
 
 <template>
-  <div class="article-section" :class="contentGap">
-    <div class="article-section-header">
-      <div class="article-section-header-text">
-        <h1 class="article-section-title" :class="titleStyle">{{ title }}</h1>
-        <p class="article-section-description" :class="descriptionStyle">
+  <div
+    class="flex flex-col justify-between rounded-2xl bg-gray-10 w-158"
+    :class="[contentGap, containerPadding]"
+  >
+    <div class="flex justify-between" :class="alignment">
+      <div class="flex flex-col" :class="headerGap">
+        <h1 :class="[titleStyle]">{{ title }}</h1>
+        <p :class="descriptionStyle">
           {{ description }}
         </p>
       </div>
