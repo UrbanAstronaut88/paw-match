@@ -13,7 +13,7 @@
 }
 
 @utility quiz-hero-description {
-  @apply text-main font-primary text-gray-100;
+  @apply text-main font-primary text-gray-80;
   max-width: 322px;
 }
 

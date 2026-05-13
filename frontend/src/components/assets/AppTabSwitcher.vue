@@ -29,7 +29,7 @@ const activeIndex = computed({
     <button
       v-for="(tab, index) in tabs"
       :key="index"
-      class="tab-switcher-item"
+      class="tab-switcher-item text-btn-small"
       :class="{ 'tab-switcher-item--active': activeIndex === index }"
       @click="activeIndex = index"
     >

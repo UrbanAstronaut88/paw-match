@@ -27,7 +27,7 @@ defineProps({
     <div
       v-for="(article, index) in articles"
       :key="index"
-      class="flex flex-col gap-4 rounded-2xl p-6 bg-gray-20 shadow-card cursor-pointer"
+      class="flex flex-col gap-2 rounded-2xl p-6 bg-gray-20 shadow-card cursor-pointer"
       @click="router.push(`/article/${article.slug}`)"
     >
       <h3 class="text-h3 font-primary text-gray-100">{{ article.title }}</h3>

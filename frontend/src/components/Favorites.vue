@@ -117,7 +117,7 @@ const selectedIdsStrings = computed({
           />
         </svg>
       </button>
-      <span class="font-primary text-main text-gray-80">Назад</span>
+      <span class="font-primary text-btn text-gray-80">Назад</span>
     </div>
 
     <div

@@ -1,37 +1,45 @@
 @theme {
-  --font-primary: "Poppins", sans-serif;
+  --font-primary: "Manrope", sans-serif;
 
   --text-h1: 26px;
   --text-h1--line-height: 1.2;
-  --text-h1--font-weight: 700;
+  --text-h1--font-weight: 800;
+  --text-h1--letter-spacing: 0em;
 
   --text-h2: 22px;
   --text-h2--line-height: 1.2;
-  --text-h2--font-weight: 600;
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: 0em;
 
   --text-h3: 18px;
   --text-h3--line-height: 1.2;
-  --text-h3--font-weight: 500;
+  --text-h3--font-weight: 600;
+  --text-h3--letter-spacing: 0em;
 
   --text-btn: 16px;
   --text-btn--line-height: 1;
-  --text-btn--font-weight: 500;
+  --text-btn--font-weight: 600;
+  --text-btn--letter-spacing: 0em;
 
-  --text-name: 20px;
-  --text-name--line-height: 1.5;
-  --text-name--font-weight: 700;
+  --text-btn-small: 14px;
+  --text-btn-small--line-height: 1.2;
+  --text-btn-small--font-weight: 600;
+  --text-btn-small--letter-spacing: 0em;
 
   --text-main: 16px;
   --text-main--line-height: 1.5;
-  --text-main--font-weight: 500;
+  --text-main--font-weight: 600;
+  --text-main--letter-spacing: 0em;
 
   --text-secondary: 14px;
   --text-secondary--line-height: 1.5;
-  --text-secondary--font-weight: 400;
+  --text-secondary--font-weight: 500;
+  --text-secondary--letter-spacing: 0em;
 
   --text-small: 14px;
-  --text-small--line-height: 1;
-  --text-small--font-weight: 600;
+  --text-small--line-height: 1.3;
+  --text-small--font-weight: 400;
+  --text-small--letter-spacing: 0em;
 
   /* colors */
   --color-primary: #ff682e;

@@ -12,7 +12,7 @@ defineEmits(["back"]);
       <button class="btn btn-icon btn-icon-secondary" @click="$emit('back')">
         <ArrowLeftIcon class="size-6" />
       </button>
-      <span class="font-primary text-main text-gray-80"> Назад </span>
+      <span class="font-primary text-btn text-gray-80"> Назад </span>
     </div>
 
     <slot />

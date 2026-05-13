@@ -25,17 +25,23 @@ function openArticle(slug) {
       text-col-class="col-span-3"
     >
       <div
-        class="col-span-12 grid grid-cols-2 grid-flow-col grid-rows-3 gap-8 mb-9 -mt-2"
+        class="col-span-12 grid grid-cols-2 grid-flow-col grid-rows-3 gap-x-8 gap-y-6 mb-9 -mt-2"
       >
         <ArticleSection
           v-for="article in articles"
           :key="article.id"
           :title="article.title"
-          :description="article.description"
-          title-style="text-h2 font-primary text-gray-100"
-          description-style="text-secondary font-primary text-gray-80"
+          title-style="text-h2 font-primary text-gray-100 pl-2"
+          header-gap=""
           @click="openArticle(article.slug)"
-        />
+          content-gap="gap-2"
+          container-padding="p-6"
+          alignment="items-center"
+        >
+          <p class="text-secondary font-primary text-gray-80 max-w-[530px]">
+            {{ article.description }}
+          </p>
+        </ArticleSection>
       </div>
     </AppSplitContent>
   </AppPageLayout>
