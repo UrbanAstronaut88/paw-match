@@ -82,7 +82,6 @@ function handleHeartClick(favorite) {
             class="rounded-xl w-full h-[131px] object-cover"
           />
           <div class="flex flex-row justify-between items-start">
-            <!-- Додано класи flex-1, pr-2, line-clamp-2, break-words -->
             <h3
               class="text-gray-100 text-secondary font-primary flex-1 pr-2 line-clamp-2 break-words"
             >
