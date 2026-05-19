@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import AppBreedCard from "./assets/AppBreedCard.vue";
 import CheckIcon from "../assets/icons/ph_check-bold.svg";
-import { listFavorites, removeFavorite, compareBreeds } from "../api/breeds";
+import { listFavorites, removeFavorite } from "../api/breeds";
 import { useAuthStore } from "../stores/auth";
 import AppCheckBox from "./assets/AppCheckBox.vue";
 
@@ -19,6 +19,14 @@ const removeError = ref("");
 
 const canCompare = computed(() => selectedIds.value.length === 2);
 
+function isBlocked(breedId) {
+  return (
+    isCompareMode.value &&
+    selectedIds.value.length >= 2 &&
+    !selectedIds.value.includes(breedId)
+  );
+}
+
 onMounted(async () => {
   if (!authStore.isAuthenticated) {
     router.push("/auth");
@@ -33,10 +41,9 @@ onMounted(async () => {
       name: f.breed.name,
       image: f.breed.image || f.breed.image_url,
     }));
-  } catch (error) {
+  } catch {
     fetchError.value =
       "Не вдалось завантажити улюблені породи. Спробуйте ще раз.";
-    favorites.value = mockFavorites;
   } finally {
     isLoading.value = false;
   }
@@ -47,7 +54,7 @@ async function handleRemove(breedId) {
     await removeFavorite(breedId);
     favorites.value = favorites.value.filter((f) => f.id !== breedId);
     selectedIds.value = selectedIds.value.filter((id) => id !== breedId);
-  } catch (error) {
+  } catch {
     removeError.value = "Не вдалось видалити породу.";
     setTimeout(() => {
       removeError.value = "";
@@ -122,7 +129,7 @@ const selectedIdsStrings = computed({
 
     <div
       class="col-span-12 flex flex-col gap-10 pb-20"
-      :class="isCompareMode ? 'row-start-2' : ' row-start-1'"
+      :class="isCompareMode ? 'row-start-2' : 'row-start-1'"
     >
       <div class="flex flex-col gap-8">
         <h1 class="font-primary text-h1 max-w-[411px] text-gray-100">
@@ -175,21 +182,33 @@ const selectedIdsStrings = computed({
         <span v-if="removeError" class="font-primary text-secondary text-error">
           {{ removeError }}
         </span>
-        <div v-else-if="favorites.length > 0" class="grid grid-cols-4 gap-8">
-          <div v-for="breed in favorites" :key="breed.id" class="relative">
-            <label v-if="isCompareMode" class="absolute top-4 right-4 z-10">
-              <AppCheckBox
-                :icon="CheckIcon"
-                :value="String(breed.id)"
-                variant="checkbox-round"
-                v-model="selectedIdsStrings"
-                :disabled="
-                  selectedIds.length >= 2 && !selectedIds.includes(breed.id)
-                "
-              />
-            </label>
 
-            <div :class="isCompareMode ? 'pointer-events-none' : ''">
+        <div v-if="favorites.length > 0" class="grid grid-cols-4 gap-8">
+          <div v-for="breed in favorites" :key="breed.id" class="relative">
+            <div
+              class="transition-transform"
+              :class="[
+                isBlocked(breed.id) ? 'opacity-50 cursor-not-allowed' : '',
+              ]"
+            >
+              <label
+                v-if="isCompareMode"
+                class="absolute top-4 right-4 z-10"
+                @click.stop
+              >
+                <AppCheckBox
+                  :icon="CheckIcon"
+                  :value="String(breed.id)"
+                  variant="checkbox-round"
+                  v-model="selectedIdsStrings"
+                  :disabled="isBlocked(breed.id)"
+                  @click="
+                    isCompareMode && !isBlocked(breed.id)
+                      ? toggleSelect(breed.id)
+                      : null
+                  "
+                />
+              </label>
               <AppBreedCard
                 :title="breed.name"
                 :image="breed.image"
@@ -205,7 +224,6 @@ const selectedIdsStrings = computed({
           <h3 class="text-h3 font-primary text-gray-100">
             Ще немає улюблених порід...
           </h3>
-
           <button
             class="btn btn-md btn-primary"
             @click="router.push('/explore')"

@@ -71,6 +71,7 @@
   width: 32px;
   height: 32px;
   border-color: var(--color-gray-60);
+  background-color: var(--color-white);
   color: transparent;
 
   .form-input-hidden:checked + & {
