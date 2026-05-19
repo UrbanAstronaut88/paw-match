@@ -5,17 +5,21 @@ import AppPageLayout from "./assets/AppPageLayout.vue";
 import AppBreedCard from "./assets/AppBreedCard.vue";
 import AppBreedStats from "./assets/AppBreedStats.vue";
 import AppHomeTag from "./assets/AppHomeTag.vue";
-import { compareBreeds } from "../api/breeds";
+import { compareBreeds, addFavorite, removeFavorite, listFavorites } from "../api/breeds";
 import AppSplitContent from "./assets/AppSplitContent.vue";
+import { useAuthStore } from "../stores/auth";
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const isLoading = ref(false);
 const compareError = ref("");
 const firstBreed = ref(null);
 const secondBreed = ref(null);
 const conclusion = ref("");
+const firstLiked = ref(false);
+const secondLiked = ref(false);
 
 function getStats(traits) {
   return [
@@ -48,12 +52,36 @@ onMounted(async () => {
     firstBreed.value = result.first_breed;
     secondBreed.value = result.second_breed;
     conclusion.value = result.conclusion;
-  } catch (error) {
+
+    if (authStore.isAuthenticated) {
+      const favorites = await listFavorites();
+      const ids = new Set(favorites.results.map((f) => f.breed.id));
+      firstLiked.value = ids.has(result.first_breed.id);
+      secondLiked.value = ids.has(result.second_breed.id);
+    }
+  } catch {
     compareError.value = "Не вдалось порівняти породи. Спробуйте ще раз.";
   } finally {
     isLoading.value = false;
   }
 });
+
+async function toggleFavorite(which) {
+  const breed = which === "first" ? firstBreed.value : secondBreed.value;
+  const isLiked = which === "first" ? firstLiked.value : secondLiked.value;
+
+  try {
+    if (isLiked) {
+      await removeFavorite(breed.id);
+    } else {
+      await addFavorite(breed.id);
+    }
+    if (which === "first") firstLiked.value = !firstLiked.value;
+    else secondLiked.value = !secondLiked.value;
+  } catch {
+    // тихо ігноруємо
+  }
+}
 </script>
 
 <template>
@@ -79,20 +107,17 @@ onMounted(async () => {
 
     <template v-else-if="firstBreed && secondBreed">
       <div class="col-span-12 row-start-2 flex flex-col gap-2">
-        <h1 class="font-primary text-h1 text-gray-100">
-          Результати порівняння
-        </h1>
-        <p class="font-primary text-secondary text-gray-100">
-          Порівняли — тепер обирайте
-        </p>
+        <h1 class="font-primary text-h1 text-gray-100">Результати порівняння</h1>
+        <p class="font-primary text-secondary text-gray-100">Порівняли — тепер обирайте</p>
       </div>
 
       <div class="col-span-6 row-start-3">
         <AppBreedCard
           :title="firstBreed.name"
           :image="firstBreed.image_src"
-          :liked="true"
+          :liked="firstLiked"
           size="big"
+          @toggle-like="toggleFavorite('first')"
           @view="router.push(`/breed/${firstBreed.id}`)"
         />
       </div>
@@ -101,8 +126,9 @@ onMounted(async () => {
         <AppBreedCard
           :title="secondBreed.name"
           :image="secondBreed.image_src"
-          :liked="true"
+          :liked="secondLiked"
           size="big"
+          @toggle-like="toggleFavorite('second')"
           @view="router.push(`/breed/${secondBreed.id}`)"
         />
       </div>
@@ -126,9 +152,7 @@ onMounted(async () => {
         class="col-span-4 col-start-1 row-start-5 flex flex-col gap-6 pb-20"
       >
         <h2 class="font-primary text-h3 text-gray-100">Висновок</h2>
-        <p class="font-primary text-secondary text-gray-100">
-          {{ conclusion }}
-        </p>
+        <p class="font-primary text-secondary text-gray-100">{{ conclusion }}</p>
         <button
           class="btn btn-primary btn-big w-[300px] mt-4"
           @click="router.push('/favorites')"
