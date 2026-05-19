@@ -10,6 +10,7 @@ const props = defineProps({
   image: { type: String, required: true },
   size: { type: String, default: "sm" },
   liked: { type: Boolean, default: false },
+  viewDisabled: { type: Boolean, default: false },
 });
 
 const isLiked = ref(props.liked);
@@ -36,7 +37,7 @@ function toggleLike() {
         class="overflow-hidden shrink-0"
         :class="size === 'big' ? 'h-125 w-146' : 'h-67 w-67'"
       >
-        <img :src="image" :alt="title" class="w-full h-full object-cover" />
+        <img :src="image" :alt="title" class="w-full h-full object-cover rounded-2xl" />
       </div>
 
       <div
@@ -64,7 +65,8 @@ function toggleLike() {
 
         <button
           class="btn btn-primary self-start"
-          :class="size === 'big' ? 'btn-md' : 'btn-sm'"
+          :class="[size === 'big' ? 'btn-md' : 'btn-sm']"
+          :disabled="viewDisabled"
           @click.stop="emit('view')"
         >
           Переглянути
